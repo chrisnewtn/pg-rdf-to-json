@@ -1,0 +1,19 @@
+{
+  "name": "rdf2json",
+  "version": "0.0.0",
+  "description": "Transforms RDF files from rdf-files.tar.bz2 into JS objects",
+  "license": "ISC",
+  "author": "Chris Newton",
+  "type": "module",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "node --test"
+  },
+  "dependencies": {
+    "fast-xml-parser": "^5.0.7",
+    "html-entities": "^2.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.13.5"
+  }
+}
