@@ -20,7 +20,7 @@ export class Book {
   authors: Agent[] = [];
   contributors: Agent[] = [];
   type: BookType;
-  languages: string[] = [];
+  languages: string[];
   subjects: Set<string>;
   bookshelves: Set<string>;
   files: object[] = [];
@@ -33,12 +33,8 @@ export class Book {
     this.authors = Array.from(instances(Agent, xmlBook['dcterms:creator']));
     this.contributors = Array.from(instances(Agent, xmlBook['marcrel:edt']));
     this.subjects = new Set(parseSubjects(xmlBook['dcterms:subject']));
-    this.bookshelves = new Set(parseSubjects(xmlBook['pgterms:bookshelf']))
-
-    for (const language of descContents(xmlBook['dcterms:language'])) {
-      this.languages.push(language);
-    }
-
+    this.bookshelves = new Set(parseSubjects(xmlBook['pgterms:bookshelf']));
+    this.languages = Array.from(descContents(xmlBook['dcterms:language']));
     this.files = Array.from(instances(File, xmlBook['dcterms:hasFormat']));
   }
 }
