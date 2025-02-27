@@ -43,7 +43,7 @@ export class Book {
   }
 }
 
-class Agent {
+export class Agent {
   id: string;
   name: string;
   birthDate: number | null;
@@ -51,26 +51,64 @@ class Agent {
   aliases: Set<string>;
   webpages: Set<string>;
 
-  constructor({'pgterms:agent': agent}: PGAgent) {
-    this.id = agent['@_rdf:about'];
-    this.name = agent['pgterms:name']['#text'];
-    this.birthDate = agent['pgterms:birthdate']?.['#text'] || null;
-    this.deathDate = agent['pgterms:deathdate']?.['#text'] || null;
-    this.aliases = new Set(nodeContents(agent['pgterms:alias']));
-    this.webpages = new Set(toResources(agent['pgterms:webpage']));
+  constructor(fields: {
+    id: string,
+    name: string,
+    birthDate: number | null,
+    deathDate: number | null,
+    aliases: Set<string>,
+    webpages: Set<string>,
+  }) {
+    this.id = fields.id;
+    this.name = fields.name;
+    this.birthDate = fields.birthDate;
+    this.deathDate = fields.deathDate;
+    this.aliases = fields.aliases;
+    this.webpages = fields.webpages;
+  }
+
+  static from({'pgterms:agent': agent}: PGAgent) {
+    return new Agent({
+      id: agent['@_rdf:about'],
+      name: agent['pgterms:name']['#text'],
+      birthDate: agent['pgterms:birthdate']?.['#text'] || null,
+      deathDate: agent['pgterms:deathdate']?.['#text'] || null,
+      aliases: new Set(nodeContents(agent['pgterms:alias'])),
+      webpages: new Set(toResources(agent['pgterms:webpage'])),
+    });
   }
 }
 
-class File {
-  href: string;
+export class File {
+  href: URL;
   contentTypes: Set<string>;
   extents: Array<number>;
-  modifiedDates: Set<string>;
+  modifiedDates: Set<Date>;
 
-  constructor(f: PGFile) {
-    this.href = f['pgterms:file']['@_rdf:about'];
-    this.contentTypes = new Set(descContents(f['pgterms:file']['dcterms:format']));
-    this.extents = Array.from(nodeContents(f['pgterms:file']['dcterms:extent']));
-    this.modifiedDates = new Set(nodeContents(f['pgterms:file']['dcterms:modified']));
+  constructor(fields: {
+    href: URL,
+    contentTypes: Set<string>,
+    extents: Array<number>,
+    modifiedDates: Set<Date>,
+  }) {
+    this.href = fields.href;
+    this.contentTypes = fields.contentTypes;
+    this.extents = fields.extents;
+    this.modifiedDates = fields.modifiedDates;
+  }
+
+  static from(f: PGFile) {
+    const modifiedDates = new Set<Date>();
+
+    for (const date of nodeContents(f['pgterms:file']['dcterms:modified'])) {
+      modifiedDates.add(new Date(date));
+    }
+
+    return new File({
+      href: new URL(f['pgterms:file']['@_rdf:about']),
+      contentTypes: new Set(descContents(f['pgterms:file']['dcterms:format'])),
+      extents: Array.from(nodeContents(f['pgterms:file']['dcterms:extent'])),
+      modifiedDates,
+    });
   }
 }

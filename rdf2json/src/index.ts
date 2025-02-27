@@ -22,6 +22,10 @@ async function* processArchive(archiveStream: internal.Readable) {
       file += '\n' + line;
     }
   }
+
+  if (file !== '') {
+    yield file;
+  }
 }
 
 async function* rdfFileStream(stream: internal.Readable) {

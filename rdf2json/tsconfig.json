@@ -11,6 +11,5 @@
     "module": "NodeNext",
     "target": "ES2022"
   },
-  "include": ["**/*.js", "**/*.ts"],
-  "exclude": ["**/*.test.js"]
+  "include": ["**/*.js", "**/*.ts"]
 }

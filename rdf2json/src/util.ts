@@ -2,7 +2,7 @@ import {
   type RDFDescription,
   type RDFResource,
   type Node,
-  type Constructor,
+  type FromXML,
   type NoneOneOrMany,
 } from './types.ts';
 
@@ -61,12 +61,12 @@ export function* nodeContents<T>(strings: Node<T> | Node<T>[] | undefined) {
   }
 }
 
-export function* instances<TI, TO>(F: Constructor<TI, TO>, agents: NoneOneOrMany<TI>) {
+export function* instances<TI, TO>(F: FromXML<TI, TO>, agents: NoneOneOrMany<TI>) {
   if (Array.isArray(agents)) {
     for (const agent of agents) {
-      yield new F(agent);
+      yield F.from(agent);
     }
   } else if (agents !== undefined) {
-    yield new F(agents);
+    yield F.from(agents);
   }
 }

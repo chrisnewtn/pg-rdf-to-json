@@ -68,6 +68,6 @@ export interface RDFFile {
   }
 }
 
-export interface Constructor<TI, TO> {
-  new (args: TI): TO;
+export interface FromXML<TI, TO> {
+  from (fields: TI): TO;
 }
