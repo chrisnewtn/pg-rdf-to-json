@@ -49,7 +49,7 @@ describe(file, () => {
     deepEqual(book.languages, ['zh']);
   });
 
-  it('has an author of "Freud, Sigmund"', () => {
+  it('has an author of "Wu, Jianren"', () => {
     deepEqual(book.authors, [
       new Agent({
         id: '2009/agents/26060',
