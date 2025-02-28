@@ -10,6 +10,16 @@ function descVal<T>(description: RDFDescription<T>) {
   return description['rdf:Description']['rdf:value']['#text'];
 }
 
+function* unwrap<T>(noneOneOrMany: NoneOneOrMany<T>) {
+  if (Array.isArray(noneOneOrMany)) {
+    for (const one of noneOneOrMany) {
+      yield one;
+    }
+  } else if (noneOneOrMany !== undefined) {
+    yield noneOneOrMany;
+  }
+}
+
 export function* parseSubjects(subjects: NoneOneOrMany<RDFDescription>) {
   if (subjects === undefined) {
     return;
@@ -31,42 +41,25 @@ export function* parseSubjects(subjects: NoneOneOrMany<RDFDescription>) {
 }
 
 export function* toResources(resources: NoneOneOrMany<RDFResource>) {
-  if (Array.isArray(resources)) {
-    for (const resource of resources) {
-      yield resource['@_rdf:resource'];
-    }
-  } else if (resources !== undefined) {
-    yield resources['@_rdf:resource'];
+  for (const resource of unwrap(resources)) {
+    yield resource['@_rdf:resource'];
   }
 }
 
 export function* descContents<T>(files: NoneOneOrMany<RDFDescription<T>>) {
-  if (Array.isArray(files)) {
-    for (const file of files) {
-      yield descVal(file);
-    }
-    return;
-  } else if (files !== undefined) {
-    yield descVal(files);
+  for (const file of unwrap(files)) {
+    yield descVal(file);
   }
 }
 
 export function* nodeContents<T>(strings: NoneOneOrMany<Node<T>>) {
-  if (Array.isArray(strings)) {
-    for (const string of strings) {
-      yield string['#text'];
-    }
-  } else if (strings && Object.hasOwn(strings, '#text')) {
-    yield strings['#text'];
+  for (const string of unwrap(strings)) {
+    yield string['#text'];
   }
 }
 
 export function* instances<TI, TO>(F: FromXML<TI, TO>, agents: NoneOneOrMany<TI>) {
-  if (Array.isArray(agents)) {
-    for (const agent of agents) {
-      yield F.from(agent);
-    }
-  } else if (agents !== undefined) {
-    yield F.from(agents);
+  for (const agent of unwrap(agents)) {
+    yield F.from(agent);
   }
 }
