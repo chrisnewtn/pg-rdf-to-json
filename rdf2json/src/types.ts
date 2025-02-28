@@ -52,7 +52,7 @@ export interface RDFFile {
       'dcterms:issued': Node;
       'dcterms:title': Node<string | number>;
       'dcterms:creator': NoneOneOrMany<PGAgent | RDFResource>;
-      'marcrel:edt': NoneOneOrMany<PGAgent>;
+      'marcrel:edt': NoneOneOrMany<PGAgent | RDFResource>;
       'dcterms:rights': Node;
       'pgterms:downloads': number;
       'pgterms:marc508': Node | number | undefined; // https://www.loc.gov/marc/bibliographic/bd508.html

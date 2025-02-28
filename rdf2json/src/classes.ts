@@ -20,7 +20,7 @@ export class Book {
   title: string;
   description: string | null;
   authors: Array<Agent | Resource> = [];
-  contributors: Agent[] = [];
+  contributors: Array<Agent | Resource> = [];
   type: BookType;
   languages: string[];
   subjects: Set<string>;
@@ -33,7 +33,7 @@ export class Book {
     this.type = xmlBook['dcterms:type']['rdf:Description']['rdf:value']['#text'];
     this.description = xmlBook['pgterms:marc520']?.['#text'] || null;
     this.authors = Array.from(agents(xmlBook['dcterms:creator']));
-    this.contributors = Array.from(instances(Agent, xmlBook['marcrel:edt']));
+    this.contributors = Array.from(agents(xmlBook['marcrel:edt']));
     this.subjects = new Set(parseSubjects(xmlBook['dcterms:subject']));
     this.bookshelves = new Set(parseSubjects(xmlBook['pgterms:bookshelf']));
     this.languages = Array.from(descContents(xmlBook['dcterms:language']));

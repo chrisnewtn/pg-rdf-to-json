@@ -40,7 +40,7 @@ describe(file, () => {
     deepEqual(book.languages, ['en']);
   });
 
-  it('has various authors including "Bekker, Paul"', () => {
+  it('has an author of "Johnston, Mary"', () => {
     deepEqual(book.authors, [
       new Agent({
         id: '2009/agents/695',
