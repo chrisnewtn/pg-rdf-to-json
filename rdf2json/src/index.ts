@@ -42,6 +42,9 @@ async function* rdfFileStream(stream: internal.Readable) {
 export async function* booksFromStream(stream: internal.Readable) {
   for await (const file of rdfFileStream(stream)) {
     try {
+      if (!Object.hasOwn(file['rdf:RDF']['pgterms:ebook'], 'dcterms:title')) {
+        continue;
+      }
       yield new Book(file);
     } catch (cause) {
       const bookId = file['rdf:RDF']['pgterms:ebook']['@_rdf:about'];
