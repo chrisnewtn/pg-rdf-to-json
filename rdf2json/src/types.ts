@@ -51,7 +51,7 @@ export interface RDFFile {
       'dcterms:publisher': Node;
       'dcterms:issued': Node;
       'dcterms:title': Node;
-      'dcterms:creator': NoneOneOrMany<PGAgent>;
+      'dcterms:creator': NoneOneOrMany<PGAgent | RDFResource>;
       'marcrel:edt': NoneOneOrMany<PGAgent>;
       'dcterms:rights': Node;
       'pgterms:downloads': number;

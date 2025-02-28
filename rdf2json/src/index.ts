@@ -2,8 +2,8 @@ import readline from 'node:readline/promises';
 import { XMLParser } from 'fast-xml-parser';
 import { spawn } from 'node:child_process';
 import internal from 'node:stream';
-import { type RDFFile } from './types.ts';
-import { Book } from './classes.ts';
+import { type RDFFile } from './types.js';
+import { Book } from './classes.js';
 
 async function* processArchive(archiveStream: internal.Readable) {
   let file = '';
@@ -41,7 +41,12 @@ async function* rdfFileStream(stream: internal.Readable) {
 
 export async function* booksFromStream(stream: internal.Readable) {
   for await (const file of rdfFileStream(stream)) {
-    yield new Book(file);
+    try {
+      yield new Book(file);
+    } catch (cause) {
+      const bookId = file['rdf:RDF']['pgterms:ebook']['@_rdf:about'];
+      throw new Error(`Problem parsing "${bookId}"`, {cause});
+    }
   }
 }
 

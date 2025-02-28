@@ -1,10 +1,12 @@
+import { Agent, Resource } from './classes.js';
 import {
   type RDFDescription,
   type RDFResource,
   type Node,
   type FromXML,
   type NoneOneOrMany,
-} from './types.ts';
+  type PGAgent,
+} from './types.js';
 
 function descVal<T>(description: RDFDescription<T>) {
   return description['rdf:Description']['rdf:value']['#text'];
@@ -58,8 +60,28 @@ export function* nodeContents<T>(strings: NoneOneOrMany<Node<T>>) {
   }
 }
 
-export function* instances<TI, TO>(F: FromXML<TI, TO>, agents: NoneOneOrMany<TI>) {
+export function* instances<TI, TO>(F: FromXML<TI, TO>, values: NoneOneOrMany<TI>) {
+  for (const value of unwrap(values)) {
+    yield F.from(value);
+  }
+}
+
+function isRdfResource(object: any): object is RDFResource {
+  return typeof object === 'object' && Object.hasOwn(object, '@_rdf:resource');
+}
+
+function isPgAgent(object: any): object is PGAgent {
+  return typeof object === 'object' && Object.hasOwn(object, 'pgterms:agent');
+}
+
+export function* agents(agents: NoneOneOrMany<PGAgent | RDFResource>) {
   for (const agent of unwrap(agents)) {
-    yield F.from(agent);
+    if (isRdfResource(agent)) {
+      yield Resource.from(agent);
+    } else if (isPgAgent(agent)) {
+      yield Agent.from(agent);
+    } else {
+      throw new TypeError('Expected PGAgent | RDFResource');
+    }
   }
 }

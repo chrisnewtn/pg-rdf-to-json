@@ -5,11 +5,12 @@
     "allowJs": true,
     "declaration": true,
     "declarationMap": true,
-    "noEmit": true,
-    "allowImportingTsExtensions": true,
+    "inlineSourceMap": true,
+    "outDir": "dist",
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
     "target": "ES2022"
   },
-  "include": ["**/*.js", "**/*.ts"]
+  "include": ["**/*.js", "**/*.ts"],
+  "exclude": ["**/*.test.js"]
 }

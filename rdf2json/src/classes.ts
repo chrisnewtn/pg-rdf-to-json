@@ -4,20 +4,22 @@ import {
   type RDFFile,
   type PGAgent,
   type PGFile,
-} from './types.ts';
+  type RDFResource,
+} from './types.js';
 import {
+  agents,
   descContents,
   instances,
   nodeContents,
   parseSubjects,
   toResources
-} from './util.ts';
+} from './util.js';
 
 export class Book {
   id: string;
   title: string;
   description: string | null;
-  authors: Agent[] = [];
+  authors: Array<Agent | Resource> = [];
   contributors: Agent[] = [];
   type: BookType;
   languages: string[];
@@ -30,7 +32,7 @@ export class Book {
     this.title = decode(xmlBook['dcterms:title']['#text']).trim();
     this.type = xmlBook['dcterms:type']['rdf:Description']['rdf:value']['#text'];
     this.description = xmlBook['pgterms:marc520']?.['#text'] || null;
-    this.authors = Array.from(instances(Agent, xmlBook['dcterms:creator']));
+    this.authors = Array.from(agents(xmlBook['dcterms:creator']));
     this.contributors = Array.from(instances(Agent, xmlBook['marcrel:edt']));
     this.subjects = new Set(parseSubjects(xmlBook['dcterms:subject']));
     this.bookshelves = new Set(parseSubjects(xmlBook['pgterms:bookshelf']));
@@ -106,5 +108,17 @@ export class File {
       extents: Array.from(nodeContents(f['pgterms:file']['dcterms:extent'])),
       modifiedDates,
     });
+  }
+}
+
+export class Resource {
+  resource: string;
+
+  constructor(fields: {resource: string}) {
+    this.resource = fields.resource;
+  }
+
+  static from(resource: RDFResource) {
+    return new Resource({resource: resource['@_rdf:resource']});
   }
 }

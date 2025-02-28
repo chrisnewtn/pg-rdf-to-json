@@ -5,15 +5,21 @@
   "license": "ISC",
   "author": "Chris Newton",
   "type": "module",
-  "main": "src/index.ts",
+  "bin": "dist/cli.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "node --test"
+    "prebuild": "rm -rf dist",
+    "build": "tsc -p tsconfig.json",
+    "postbuild": "chmod +x dist/cli.js",
+    "pretest": "npm run build",
+    "test": "node --test --enable-source-maps"
   },
   "dependencies": {
     "fast-xml-parser": "^5.0.7",
     "html-entities": "^2.5.2"
   },
   "devDependencies": {
-    "@types/node": "^22.13.5"
+    "@types/node": "^22.13.5",
+    "typescript": "^5.7.3"
   }
 }

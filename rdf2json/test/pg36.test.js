@@ -1,7 +1,7 @@
-import { booksFromStream } from '../src/index.ts';
+import { booksFromStream } from '../dist/index.js';
 import { before, describe, it } from 'node:test';
 import { equal, deepEqual } from 'node:assert/strict';
-import { Agent, Book, File } from '../src/classes.ts';
+import { Agent, Book, File } from '../dist/classes.js';
 import { createReadStream } from 'node:fs';
 import path from 'node:path';
 
