@@ -104,7 +104,7 @@ describe(file, () => {
     ]));
   });
 
-  it('has a subjects of "DE Sachbuch" and others', () => {
+  it('has a bookshelves of "DE Sachbuch" and others', () => {
     deepEqual(book.bookshelves, new Set([
       'Browsing: Culture/Civilization/Society',
       'Browsing: History - General',

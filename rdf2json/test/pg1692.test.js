@@ -71,7 +71,7 @@ describe(file, () => {
     ]));
   });
 
-  it('has a subjects of "Browsing: Fiction" and others', () => {
+  it('has a bookshelves of "Browsing: Fiction" and others', () => {
     deepEqual(book.bookshelves, new Set([
       'Browsing: Fiction',
       'Browsing: History - General',

@@ -63,7 +63,7 @@ describe(file, () => {
     ]));
   });
 
-  it('has a subjects of "Browsing: Philosophy & Ethics" and others', () => {
+  it('has a bookshelves of "Browsing: Philosophy & Ethics" and others', () => {
     deepEqual(book.bookshelves, new Set([
       'Browsing: Philosophy & Ethics',
       'Browsing: Psychiatry/Psychology',

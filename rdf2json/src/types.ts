@@ -50,7 +50,8 @@ export interface RDFFile {
       '@_rdf:about': string;
       'dcterms:publisher': Node;
       'dcterms:issued': Node;
-      'dcterms:title': Node<string | number>;
+      'dcterms:title': NoneOneOrMany<Node<string | number>>;
+      'dcterms:alternative': NoneOneOrMany<Node<string | number>>;
       'dcterms:creator': NoneOneOrMany<PGAgent | RDFResource>;
       'marcrel:edt': NoneOneOrMany<PGAgent | RDFResource>;
       'dcterms:rights': Node;

@@ -62,7 +62,7 @@ describe('pg36.rdf', () => {
     ]));
   });
 
-  it('has a subjects of "Browsing: Fiction", "Movie Books" and others', () => {
+  it('has a bookshelves of "Browsing: Fiction", "Movie Books" and others', () => {
     deepEqual(book.bookshelves, new Set([
       'Browsing: Fiction',
       'Browsing: History - Warfare',

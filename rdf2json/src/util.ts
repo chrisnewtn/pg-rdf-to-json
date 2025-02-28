@@ -1,3 +1,4 @@
+import { decode } from 'html-entities';
 import { Agent, Resource } from './classes.js';
 import {
   type RDFDescription,
@@ -12,7 +13,11 @@ function descVal<T>(description: RDFDescription<T>) {
   return description['rdf:Description']['rdf:value']['#text'];
 }
 
-function* unwrap<T>(noneOneOrMany: NoneOneOrMany<T>) {
+export function decodeNode({ '#text': text }: Node<string | number>) {
+  return decode(text.toString()).trim();
+}
+
+export function* unwrap<T>(noneOneOrMany: NoneOneOrMany<T>) {
   if (Array.isArray(noneOneOrMany)) {
     for (const one of noneOneOrMany) {
       yield one;

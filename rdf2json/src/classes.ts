@@ -1,4 +1,3 @@
-import { decode } from 'html-entities';
 import {
   type BookType,
   type RDFFile,
@@ -8,16 +7,19 @@ import {
 } from './types.js';
 import {
   agents,
+  decodeNode,
   descContents,
   instances,
   nodeContents,
   parseSubjects,
-  toResources
+  toResources,
+  unwrap
 } from './util.js';
 
 export class Book {
   id: string;
-  title: string;
+  title: string = '';
+  alternativeTitles: string[] = [];
   description: string | null;
   authors: Array<Agent | Resource> = [];
   contributors: Array<Agent | Resource> = [];
@@ -29,7 +31,6 @@ export class Book {
 
   constructor({'rdf:RDF': {'pgterms:ebook': xmlBook}}: RDFFile) {
     this.id = xmlBook['@_rdf:about'];
-    this.title = decode(xmlBook['dcterms:title']['#text'].toString()).trim();
     this.type = xmlBook['dcterms:type']['rdf:Description']['rdf:value']['#text'];
     this.description = xmlBook['pgterms:marc520']?.['#text'] || null;
     this.authors = Array.from(agents(xmlBook['dcterms:creator']));
@@ -38,6 +39,18 @@ export class Book {
     this.bookshelves = new Set(parseSubjects(xmlBook['pgterms:bookshelf']));
     this.languages = Array.from(descContents(xmlBook['dcterms:language']));
     this.files = Array.from(instances(File, xmlBook['dcterms:hasFormat']));
+
+    for (const title of unwrap(xmlBook['dcterms:title'])) {
+      if (!this.title) {
+        this.title = decodeNode(title);
+      } else {
+        this.alternativeTitles.push(decodeNode(title));
+      }
+    }
+
+    for (const title of unwrap(xmlBook['dcterms:alternative'])) {
+      this.alternativeTitles.push(decodeNode(title));
+    }
   }
 }
 
