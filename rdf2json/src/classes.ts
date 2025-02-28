@@ -29,7 +29,7 @@ export class Book {
 
   constructor({'rdf:RDF': {'pgterms:ebook': xmlBook}}: RDFFile) {
     this.id = xmlBook['@_rdf:about'];
-    this.title = decode(xmlBook['dcterms:title']['#text']).trim();
+    this.title = decode(xmlBook['dcterms:title']['#text'].toString()).trim();
     this.type = xmlBook['dcterms:type']['rdf:Description']['rdf:value']['#text'];
     this.description = xmlBook['pgterms:marc520']?.['#text'] || null;
     this.authors = Array.from(agents(xmlBook['dcterms:creator']));
@@ -61,7 +61,7 @@ export class Agent {
     this.name = fields.name;
     this.birthDate = fields.birthDate;
     this.deathDate = fields.deathDate;
-    this.aliases = fields.aliases;
+    this.aliases = fields.aliases || new Set();
     this.webpages = fields.webpages;
   }
 
