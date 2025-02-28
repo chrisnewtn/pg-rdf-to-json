@@ -41,13 +41,18 @@ async function* rdfFileStream(stream: internal.Readable) {
 
 export async function* booksFromStream(stream: internal.Readable) {
   for await (const file of rdfFileStream(stream)) {
+    const eBook = file['rdf:RDF']['pgterms:ebook'];
+
     try {
-      if (!Object.hasOwn(file['rdf:RDF']['pgterms:ebook'], 'dcterms:title')) {
+      if (!Object.hasOwn(eBook, 'dcterms:title')) {
+        continue;
+      }
+      if (!Object.hasOwn(eBook, 'dcterms:type')) {
         continue;
       }
       yield new Book(file);
     } catch (cause) {
-      const bookId = file['rdf:RDF']['pgterms:ebook']['@_rdf:about'];
+      const bookId = eBook['@_rdf:about'];
       throw new Error(`Problem parsing "${bookId}"`, {cause});
     }
   }
