@@ -11,13 +11,11 @@ async function* processArchive(archiveStream: internal.Readable) {
   const stream = readline.createInterface(archiveStream);
 
   for await (const line of stream) {
-    const chunkString = line.toString();
-
-    if (chunkString === '<?xml version="1.0" encoding="utf-8"?>') {
+    if (line === '<?xml version="1.0" encoding="utf-8"?>') {
       if (file !== '') {
         yield file;
       }
-      file = chunkString;
+      file = line;
     } else {
       file += '\n' + line;
     }
