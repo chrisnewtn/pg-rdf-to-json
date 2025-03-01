@@ -77,7 +77,7 @@ describe('pg36.rdf', () => {
 
     deepEqual(book.files.slice(0, 1), [
       new File({
-        href: new URL('https://www.gutenberg.org/ebooks/36.html.images'),
+        href: 'https://www.gutenberg.org/ebooks/36.html.images',
         contentTypes: new Set([
           'text/html'
         ]),

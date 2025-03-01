@@ -91,13 +91,13 @@ export class Agent {
 }
 
 export class File {
-  href: URL;
+  href: string;
   contentTypes: Set<string>;
   extents: Array<number>;
   modifiedDates: Set<Date>;
 
   constructor(fields: {
-    href: URL,
+    href: string,
     contentTypes: Set<string>,
     extents: Array<number>,
     modifiedDates: Set<Date>,
@@ -116,7 +116,7 @@ export class File {
     }
 
     return new File({
-      href: new URL(f['pgterms:file']['@_rdf:about']),
+      href: f['pgterms:file']['@_rdf:about'],
       contentTypes: new Set(descContents(f['pgterms:file']['dcterms:format'])),
       extents: Array.from(nodeContents(f['pgterms:file']['dcterms:extent'])),
       modifiedDates,

@@ -92,7 +92,7 @@ describe(file, () => {
 
     deepEqual(book.files.slice(0, 1), [
       new File({
-        href: new URL('https://www.gutenberg.org/ebooks/54567.html.images'),
+        href: 'https://www.gutenberg.org/ebooks/54567.html.images',
         contentTypes: new Set([
           'text/html'
         ]),
