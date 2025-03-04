@@ -37,8 +37,8 @@ async function booksToFiles(books: AsyncGenerator<Book>, output: string) {
     await fs.writeFile(newFile, JSON.stringify(book, setToArray, 2), 'utf8');
 
     const count = (++processed).toString().padStart(5, '0');
-    
-    log(`processed ${count}: ${book.id}}`);
+
+    log(`processed ${count}: ${book.id}`);
   }
 }
 
