@@ -11,7 +11,6 @@ const file = `pg${id}.rdf`;
 const pathToFixture = path.resolve(import.meta.dirname, 'fixtures', file);
 
 describe(file, () => {
-  /** @type {Book} */
   let book;
 
   before(async () => {
@@ -20,8 +19,8 @@ describe(file, () => {
     }
   });
 
-  it(`has an id of "ebooks/${id}"`, () => {
-    equal(book.id, `ebooks/${id}`);
+  it(`has an "about" of "ebooks/${id}"`, () => {
+    equal(book.about, `ebooks/${id}`);
   });
 
   it('has a title of "Alice\'s Adventures in Wonderland"', () => {
@@ -29,7 +28,7 @@ describe(file, () => {
   });
 
   it('has an alterative title of "Alice in Wonderland"', () => {
-    deepEqual(book.alternativeTitles, [
+    deepEqual(book.alternative, [
       'Alice in Wonderland'
     ]);
   });
@@ -38,69 +37,72 @@ describe(file, () => {
     equal(book.type, 'Text');
   });
 
-  it('has a populated description field', () => {
-    equal(book.description, '"Alice\'s Adventures in Wonderland" by Lewis Carroll is a classic children\'s novel written in the mid-19th century. The story follows a young girl named Alice who, feeling bored and sleepy while sitting by a riverbank, encounters a White Rabbit and follows it down a rabbit hole, plunging into a fantastical world filled with curious creatures and whimsical adventures.  The opening of the book introduces Alice as she daydreams about her surroundings before spotting the White Rabbit, who is both flustered and animated. Curious, Alice pursues the Rabbit and finds herself tumbling down a deep rabbit hole, leading to a curious hall filled with doors, all locked. After experiencing a series of bizarre changes in size from eating and drinking mysterious substances, she begins exploring this new world, initially frustrated by her newfound challenges as she navigates her size and the peculiar inhabitants she meets. The narrative sets the tone for Alice\'s whimsical and often nonsensical adventures that characterize the entire tale. (This is an automatically generated summary.)');
+  it('has a populated marc520 field', () => {
+    equal(book.marc520, '"Alice\'s Adventures in Wonderland" by Lewis Carroll is a classic children\'s novel written in the mid-19th century. The story follows a young girl named Alice who, feeling bored and sleepy while sitting by a riverbank, encounters a White Rabbit and follows it down a rabbit hole, plunging into a fantastical world filled with curious creatures and whimsical adventures.  The opening of the book introduces Alice as she daydreams about her surroundings before spotting the White Rabbit, who is both flustered and animated. Curious, Alice pursues the Rabbit and finds herself tumbling down a deep rabbit hole, leading to a curious hall filled with doors, all locked. After experiencing a series of bizarre changes in size from eating and drinking mysterious substances, she begins exploring this new world, initially frustrated by her newfound challenges as she navigates her size and the peculiar inhabitants she meets. The narrative sets the tone for Alice\'s whimsical and often nonsensical adventures that characterize the entire tale. (This is an automatically generated summary.)');
   });
 
-  it('has languages equalling ["en"]', () => {
-    deepEqual(book.languages, ['en']);
+  it('has language equalling ["en"]', () => {
+    deepEqual(book.language, ['en']);
   });
 
-  it('has an author of "Carroll, Lewis"', () => {
-    deepEqual(book.authors, [
-      new Agent({
-        id: '2009/agents/7',
+  it('has an creator of "Carroll, Lewis"', () => {
+    deepEqual(book.creator, [
+      {
+        about: '2009/agents/7',
         name: 'Carroll, Lewis',
-        birthDate: 1832,
-        deathDate: 1898,
-        aliases: new Set([
+        birthdate: 1832,
+        deathdate: 1898,
+        alias: [
           'Dodgson, Charles Lutwidge',
-        ]),
-        webpages: new Set([
+        ],
+        webpage: [
           'https://en.wikipedia.org/wiki/Lewis_Carroll',
-        ]),
-      })
+        ],
+      }
     ]);
   });
 
   it('has subjects of "Children\'s stories" and others', () => {
-    deepEqual(book.subjects, new Set([
-      'Children\'s stories',
-      'Alice (Fictitious character from Carroll)',
+    deepEqual(book.subject, [
       'Fantasy fiction',
-      'Imaginary places',
-      'Juvenile fiction',
+      'Children\'s stories',
+      'Imaginary places -- Juvenile fiction',
+      'Alice (Fictitious character from Carroll) -- Juvenile fiction',
       'PR',
       'PZ',
-    ]));
+    ]);
   });
 
   it('has bookshelves of "Children\'s Literature" and others', () => {
-    deepEqual(book.bookshelves, new Set([
+    deepEqual(book.bookshelf, [
       'Children\'s Literature',
       'Browsing: Children & Young Adult Reading',
       'Browsing: Fiction',
-    ]));
+    ]);
   });
 
   it('has a 14 related files', () => {
     equal(book.files.length, 14);
 
     deepEqual(book.files.slice(0, 1), [
-      new File({
-        href: 'https://www.gutenberg.org/ebooks/11.html.images',
-        contentTypes: new Set([
-          'text/html'
-        ]),
-        extents: [
+      {
+        about: 'https://www.gutenberg.org/ebooks/11.html.images',
+        format: [
+          'text/html',
+          'text/html',
+        ],
+        extent: [
           192440,
           192637,
         ],
-        modifiedDates: new Set([
+        isFormatOf: {
+          resource: book.about
+        },
+        modified: [
           new Date('2025-01-01T03:32:37.533868'),
           new Date('2023-10-01T03:32:23.395134')
-        ])
-      })
+        ]
+      }
     ]);
   });
 });

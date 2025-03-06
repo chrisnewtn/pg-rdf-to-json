@@ -20,8 +20,8 @@ describe(file, () => {
     }
   });
 
-  it(`has an id of "ebooks/${id}"`, () => {
-    equal(book.id, `ebooks/${id}`);
+  it(`has an "about of "ebooks/${id}"`, () => {
+    equal(book.about, `ebooks/${id}`);
   });
 
   it('has a title of "Deutsches Leben der Gegenwart"', () => {
@@ -32,105 +32,107 @@ describe(file, () => {
     equal(book.type, 'Text');
   });
 
-  it('has a populated description field', () => {
-    equal(book.description, '"Deutsches Leben der Gegenwart" by Bekker, Briefs, Scheler, Sommerfeld, and Witkop is a collective analysis of contemporary German life written in the early 20th century. This work explores various aspects of German culture, including literature, music, philosophy, science, and economic problems in the wake of World War I. The contributors, all prominent figures in their respective fields, aim to provide insights into the spiritual refreshment and growth arising from Germany\'s hardships, emphasizing the resilience of the inner cultural landscape despite external struggles.  The opening of "Deutsches Leben der Gegenwart" delves into the complex dynamics of German culture following a period of turmoil. The foreword, penned by Prof. Dr. Philipp Witkop, reflects on how Germany has historically experienced significant cultural flourishing in times of adversity, asserting that creative forces from literature, music, and philosophy are emerging anew despite political and economic challenges. Through a focus on the literary and spiritual revival following the destruction brought about by the war, the text sets the foundation for examining each contributing author\'s perspective on how contemporary German culture is characterized by both introspection and resilience. (This is an automatically generated summary.)');
+  it('has a populated marc520 field', () => {
+    equal(book.marc520, '"Deutsches Leben der Gegenwart" by Bekker, Briefs, Scheler, Sommerfeld, and Witkop is a collective analysis of contemporary German life written in the early 20th century. This work explores various aspects of German culture, including literature, music, philosophy, science, and economic problems in the wake of World War I. The contributors, all prominent figures in their respective fields, aim to provide insights into the spiritual refreshment and growth arising from Germany\'s hardships, emphasizing the resilience of the inner cultural landscape despite external struggles.  The opening of "Deutsches Leben der Gegenwart" delves into the complex dynamics of German culture following a period of turmoil. The foreword, penned by Prof. Dr. Philipp Witkop, reflects on how Germany has historically experienced significant cultural flourishing in times of adversity, asserting that creative forces from literature, music, and philosophy are emerging anew despite political and economic challenges. Through a focus on the literary and spiritual revival following the destruction brought about by the war, the text sets the foundation for examining each contributing author\'s perspective on how contemporary German culture is characterized by both introspection and resilience. (This is an automatically generated summary.)');
   });
 
-  it('has languages equalling ["de"]', () => {
-    deepEqual(book.languages, ['de']);
+  it('has language equalling ["de"]', () => {
+    deepEqual(book.language, ['de']);
   });
 
-  it('has various authors including "Bekker, Paul"', () => {
-    deepEqual(book.authors, [
-      new Agent({
-        id: '2009/agents/6582',
+  it('has various creator including "Bekker, Paul"', () => {
+    deepEqual(book.creator, [
+      {
+        about: '2009/agents/6582',
         name: 'Bekker, Paul',
-        birthDate: 1882,
-        deathDate: 1937,
-        aliases: new Set(),
-        webpages: new Set([
+        birthdate: 1882,
+        deathdate: 1937,
+        webpage: [
           'http://de.wikipedia.org/wiki/Paul_Bekker'
-        ]),
-      }),
-      new Agent({
-        id: '2009/agents/6585',
+        ],
+      },
+      {
+        about: '2009/agents/6585',
         name: 'Briefs, Goetz A. (Goetz Antony)',
-        birthDate: 1889,
-        deathDate: 1974,
-        aliases: new Set([
+        birthdate: 1889,
+        deathdate: 1974,
+        alias: [
           'Briefs, Goetz Antony'
-        ]),
-        webpages: new Set([
+        ],
+        webpage: [
           'http://de.wikipedia.org/wiki/G%C3%B6tz_Briefs'
-        ]),
-      }),
-      new Agent({
-        id: '2009/agents/6583',
+        ],
+      },
+      {
+        about: '2009/agents/6583',
         name: 'Scheler, Max',
-        birthDate: 1874,
-        deathDate: 1928,
-        aliases: new Set([
+        birthdate: 1874,
+        deathdate: 1928,
+        alias: [
           'Scheler, Max Ferdinand'
-        ]),
-        webpages: new Set([
+        ],
+        webpage: [
           'https://en.wikipedia.org/wiki/Max_Scheler',
           'https://de.wikipedia.org/wiki/Max_Scheler'
-        ]),
-      }),
-      new Agent({
-        id: '2009/agents/6584',
+        ],
+      },
+      {
+        about: '2009/agents/6584',
         name: 'Sommerfeld, Arnold',
-        birthDate: 1868,
-        deathDate: 1951,
-        aliases: new Set([
+        birthdate: 1868,
+        deathdate: 1951,
+        alias: [
           'Sommerfeld, Arnold Johannes Wilhelm',
           'Sommerfeld, A. (Arnold)'
-        ]),
-        webpages: new Set([
+        ],
+        webpage: [
           'https://en.wikipedia.org/wiki/Arnold_Sommerfeld'
-        ]),
-      }),
-      new Resource({
+        ],
+      },
+      {
         resource: '2009/agents/6581'
-      }),
+      },
     ]);
   });
 
-  it('has a subjects of "Civilization", "Germany" and "DD"', () => {
-    deepEqual(book.subjects, new Set([
-      'Civilization',
-      'Germany',
+  it('has a subject of "Germany -- Civilization" and "DD"', () => {
+    deepEqual(book.subject, [
+      'Germany -- Civilization',
       'DD',
-    ]));
+    ]);
   });
 
-  it('has a bookshelves of "DE Sachbuch" and others', () => {
-    deepEqual(book.bookshelves, new Set([
+  it('has a bookshelf of "DE Sachbuch" and others', () => {
+    deepEqual(book.bookshelf, [
+      'German Language Books',
+      'DE Sachbuch',
       'Browsing: Culture/Civilization/Society',
       'Browsing: History - General',
-      'DE Sachbuch',
-      'German Language Books',
-    ]));
+    ]);
   });
 
   it('has a 16 related files', () => {
     equal(book.files.length, 16);
 
     deepEqual(book.files.slice(0, 1), [
-      new File({
-        href: 'https://www.gutenberg.org/ebooks/16264.html.images',
-        contentTypes: new Set([
-          'text/html'
-        ]),
-        extents: [
+      {
+        about: 'https://www.gutenberg.org/ebooks/16264.html.images',
+        isFormatOf: {
+          resource: book.about
+        },
+        format: [
+          'text/html',
+          'text/html',
+        ],
+        extent: [
           618773,
           618144,
         ],
-        modifiedDates: new Set([
+        modified: [
           new Date('2025-01-15T19:29:25.239431'),
           new Date('2023-09-07T10:16:09.141390')
-        ])
-      })
+        ]
+      }
     ]);
   });
 });
