@@ -4,10 +4,32 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import { booksFromStream, booksFromArchive } from './index.js';
 import { Book } from './classes.js';
+import { RDFFile } from './types.js';
 
 function setToArray(_key: any, val: any) {
   if (val instanceof Set) {
     return Array.from(val);
+  }
+  return val;
+}
+
+function simplify(key: string, val: any) {
+  if (val instanceof Set) {
+    return Array.from(val);
+  }
+  if (typeof val?.['#text'] === 'string') {
+    switch (val?.datatype) {
+      case 'http://www.w3.org/2001/XMLSchema#integer':
+        return parseInt(val['#text'], 10);
+      case 'http://www.w3.org/2001/XMLSchema#dateTime':
+        return new Date(val['#text']).toJSON();
+      case 'http://www.w3.org/2001/XMLSchema#date':
+        return val['#text'];
+      case 'http://purl.org/dc/terms/RFC4646':
+        return val['#text'];
+      case 'http://purl.org/dc/terms/IMT':
+        return val['#text'];
+    }
   }
   return val;
 }
@@ -20,13 +42,17 @@ function log(contents: string) {
   process.stdout.write('\n');
 }
 
-async function booksToFiles(books: AsyncGenerator<Book>, output: string) {
+async function booksToFiles(books: AsyncGenerator<any>, output: string) {
   let processed = 0;
 
   const createdDirectories = new Set();
 
   for await (const book of books) {
-    const newFile = path.join(output, `${book.id}.json`);
+    if (processed > 10) {
+      break;
+    }
+    const bookId = book.about;
+    const newFile = path.join(output, `${bookId}.json`);
     const newDir = path.dirname(newFile);
 
     if (!createdDirectories.has(newDir)) {
@@ -38,13 +64,13 @@ async function booksToFiles(books: AsyncGenerator<Book>, output: string) {
 
     const count = (++processed).toString().padStart(5, '0');
 
-    log(`processed ${count}: ${book.id}`);
+    log(`processed ${count}: ${bookId}`);
   }
 }
 
-async function booksToStdout(books: AsyncGenerator<Book>) {
+async function booksToStdout(books: AsyncGenerator<any>) {
   for await (const book of books) {
-    process.stdout.write(JSON.stringify(book, setToArray));
+    process.stdout.write(JSON.stringify(book, simplify));
     process.stdout.write('\n');
   }
 }

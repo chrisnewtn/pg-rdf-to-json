@@ -20,8 +20,8 @@ describe(file, () => {
     }
   });
 
-  it(`has an id of "ebooks/${id}"`, () => {
-    equal(book.id, `ebooks/${id}`);
+  it(`has an "about" of "ebooks/${id}"`, () => {
+    equal(book.about, `ebooks/${id}`);
   });
 
   it('has a title of "Bizarre Happenings Eyewitnessed Over Two Decades"', () => {
@@ -29,7 +29,7 @@ describe(file, () => {
   });
 
   it('has alternative titles', () => {
-    deepEqual(book.alternativeTitles, [
+    deepEqual(book.alternative, [
       '二十年目睹之怪現狀',
       'Erh-shih nien mu-tu-chih kuai hsien-chuang',
       'Er shi nian mu du zhi guai xian zhuang',
@@ -41,70 +41,73 @@ describe(file, () => {
     equal(book.type, 'Text');
   });
 
-  it('has a populated description field', () => {
-    equal(book.description, '"Bizarre Happenings Eyewitnessed Over Two Decades" by Jianren Wu is a collection of personal anecdotes or observations likely written in the late 19th century. The text appears to delve into a range of unusual, intricate events and experiences witnessed by the narrator over two decades, particularly focusing on societal changes in Shanghai.   At the start of the narrative, the author introduces a bustling scene in Shanghai, highlighting the city\'s vibrant social life and the constant interactions that revolve around networking and personal connections. The narrator reflects on their own transformation over the years, having once participated in the lively yet superficial activities of society, to a more seasoned outlook marked by survival from past treacheries. The opening sets the stage for a series of bizarre events intertwined with personal growth, as the narrator stands on the brink of a deeper exploration into the complexities of human behavior and societal norms in a rapidly changing urban landscape. (This is an automatically generated summary.)');
+  it('has a populated marc520 field', () => {
+    equal(book.marc520, '"Bizarre Happenings Eyewitnessed Over Two Decades" by Jianren Wu is a collection of personal anecdotes or observations likely written in the late 19th century. The text appears to delve into a range of unusual, intricate events and experiences witnessed by the narrator over two decades, particularly focusing on societal changes in Shanghai.   At the start of the narrative, the author introduces a bustling scene in Shanghai, highlighting the city\'s vibrant social life and the constant interactions that revolve around networking and personal connections. The narrator reflects on their own transformation over the years, having once participated in the lively yet superficial activities of society, to a more seasoned outlook marked by survival from past treacheries. The opening sets the stage for a series of bizarre events intertwined with personal growth, as the narrator stands on the brink of a deeper exploration into the complexities of human behavior and societal norms in a rapidly changing urban landscape. (This is an automatically generated summary.)');
   });
 
-  it('has languages equalling ["zh"]', () => {
-    deepEqual(book.languages, ['zh']);
+  it('has language equalling ["zh"]', () => {
+    deepEqual(book.language, ['zh']);
   });
 
-  it('has an author of "Wu, Jianren"', () => {
-    deepEqual(book.authors, [
-      new Agent({
-        id: '2009/agents/26060',
+  it('has an creator of "Wu, Jianren"', () => {
+    deepEqual(book.creator, [
+      {
+        about: '2009/agents/26060',
         name: 'Wu, Jianren',
-        birthDate: 1866,
-        deathDate: 1910,
-        aliases: new Set([
+        birthdate: 1866,
+        deathdate: 1910,
+        alias: [
           '吳趼人',
           '吴趼人',
           'Wu, Woyao',
           'Wu, Chien-jen',
           'Wu, Yanren',
-        ]),
-        webpages: new Set([
+        ],
+        webpage: [
           'http://zh.wikipedia.org/wiki/%E5%90%B3%E6%B2%83%E5%A0%AF',
-        ]),
-      })
+        ],
+      }
     ]);
   });
 
-  it('has a subjects of "Chinese fiction" and others', () => {
-    deepEqual(book.subjects, new Set([
-      'Chinese fiction',
-      'PL',
-      'Qing dynasty, 1644-1912',
+  it('has a subject of "PL" and others', () => {
+    deepEqual(book.subject, [
+      'Chinese fiction -- Qing dynasty, 1644-1912',
       'Short stories, Chinese',
-    ]));
+      'PL',
+    ]);
   });
 
-  it('has a bookshelves of "Browsing: Fiction" and others', () => {
-    deepEqual(book.bookshelves, new Set([
+  it('has a bookshelf of "Browsing: Fiction" and others', () => {
+    deepEqual(book.bookshelf, [
       'Browsing: Culture/Civilization/Society',
-      'Browsing: Fiction',
       'Browsing: Literature',
-    ]));
+      'Browsing: Fiction',
+    ]);
   });
 
   it('has a 15 related files', () => {
     equal(book.files.length, 15);
 
     deepEqual(book.files.slice(0, 1), [
-      new File({
-        href: 'https://www.gutenberg.org/ebooks/54567.html.images',
-        contentTypes: new Set([
-          'text/html'
-        ]),
-        extents: [
+      {
+        about: 'https://www.gutenberg.org/ebooks/54567.html.images',
+        isFormatOf: {
+          resource: book.about
+        },
+        format: [
+          'text/html',
+          'text/html',
+        ],
+        extent: [
           791538,
           790882,
         ],
-        modifiedDates: new Set([
+        modified: [
           new Date('2025-01-21T15:09:59.374150'),
           new Date('2023-09-23T12:14:43.474566')
-        ])
-      })
+        ]
+      }
     ]);
   });
 });
