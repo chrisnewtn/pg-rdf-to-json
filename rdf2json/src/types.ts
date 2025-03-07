@@ -163,6 +163,33 @@ export interface FormattedEbook {
   /** https://id.loc.gov/vocabulary/relators/ill.html */
   illustrator?: (TaggedAgent | TaggedResource)[],
 
+  /**
+   * A person contributing to a resource by performing music, acting, dancing,
+   * speaking, etc., often in a musical or dramatic presentation, etc.
+   *
+   * If specific codes are used, [prf] is used for a person whose principal
+   * skill is not known or specified.
+   *
+   * @see {@link https://id.loc.gov/vocabulary/relators/prf.html}
+   */
+  performer?: (TaggedAgent | TaggedResource)[],
+
+  /**
+   * A person, family, or organization responsible for creating or contributing
+   * to a musical resource by adding music to a work that originally lacked it
+   * or supplements it.
+   *
+   * @see {@link https://id.loc.gov/vocabulary/relators/cmp.html}
+   */
+  composer?: (TaggedAgent | TaggedResource)[],
+
+  /**
+   * An author of a libretto of an opera or other stage work, or an oratorio.
+   *
+   * @see {@link https://id.loc.gov/vocabulary/relators/lbt.html}
+   */
+  librettist?: (TaggedAgent | TaggedResource)[],
+
   translator?: (TaggedAgent | TaggedResource)[],
   files: File[]
 }
@@ -260,6 +287,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
         ref: 'agentOrResource'
       }
     },
+    composer: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
     contributor: {
       elements: {
         ref: 'agentOrResource'
@@ -276,6 +308,16 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       }
     },
     illustrator: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
+    librettist: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
+    performer: {
       elements: {
         ref: 'agentOrResource'
       }
