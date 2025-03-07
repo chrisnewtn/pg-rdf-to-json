@@ -213,6 +213,15 @@ export interface FormattedEbook {
   compiler?: (TaggedAgent | TaggedResource)[],
 
   /**
+   * A performer contributing to a musical resource by leading a performing
+   * group (orchestra, chorus, opera, etc.) in a musical or dramatic
+   * presentation.
+   *
+   * @see {@link https://id.loc.gov/vocabulary/relators/cnd.html}
+   */
+  conductor?: (TaggedAgent | TaggedResource)[],
+
+  /**
    * A role that has no equivalent in the MARC list.
    *
    * @see {@link https://id.loc.gov/vocabulary/relators/oth.html}
@@ -330,6 +339,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       }
     },
     composer: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
+    conductor: {
       elements: {
         ref: 'agentOrResource'
       }
