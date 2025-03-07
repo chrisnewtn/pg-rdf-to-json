@@ -96,6 +96,9 @@ async function* rdfFileStream(stream: internal.Readable) {
     'rdf:RDF.pgterms:ebook.dcterms:creator'
   );
   addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:unk'
+  );
+  addAgentField(
     'rdf:RDF.pgterms:ebook.marcrel:edt',
     'editor'
   );
