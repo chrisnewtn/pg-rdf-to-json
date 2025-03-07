@@ -1,7 +1,6 @@
 import { booksFromStream } from '../dist/index.js';
 import { before, describe, it } from 'node:test';
 import { equal } from 'node:assert/strict';
-import { Book } from '../dist/classes.js';
 import { createReadStream } from 'node:fs';
 import path from 'node:path';
 
@@ -11,7 +10,6 @@ const file = `pg${id}.rdf`;
 const pathToFixture = path.resolve(import.meta.dirname, 'fixtures', file);
 
 describe(file, () => {
-  /** @type {Book} */
   let book;
 
   before(async () => {

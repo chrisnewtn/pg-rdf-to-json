@@ -3,8 +3,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { booksFromStream, booksFromArchive } from './index.js';
-import { Book } from './classes.js';
-import { RDFFile } from './types.js';
+// import { RDFFile } from './types.js';
 
 function setToArray(_key: any, val: any) {
   if (val instanceof Set) {
