@@ -124,7 +124,18 @@ export interface FormattedEbook {
   marc440?: string;
 
   marc508?: string;
-  marc520: string;
+
+  /**
+   * Unformatted information that describes the scope and general contents of
+   * the materials.
+   *
+   * This could be a summary, abstract, annotation, review, or only a phrase
+   * describing the material.
+   *
+   * @see {@link https://www.loc.gov/marc/bibliographic/bd520.html}
+   */
+  marc520?: string;
+
   marc901?: string;
   tableOfContents?: string;
   language: string[];
@@ -224,7 +235,6 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     issued: { type: 'string' },
     rights: { type: 'string' },
     downloads: { type: 'float64' },
-    marc520: { type: 'string' },
     language: {
       elements: { type: 'string' }
     },
@@ -280,6 +290,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     marc300: { type: 'string' },
     marc440: { type: 'string' },
     marc508: { type: 'string' },
+    marc520: { type: 'string' },
     marc901: { type: 'string' },
     tableOfContents: { type: 'string' },
   }
