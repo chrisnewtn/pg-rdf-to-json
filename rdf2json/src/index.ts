@@ -58,77 +58,13 @@ async function* rdfFileStream(stream: internal.Readable) {
   const tagNameMap: Map<string, string> = new Map();
   const attrNameMap: Map<string, string> = new Map();
 
-  const attrUnionDiscriminators = new Map([
-    [
-      'rdf:RDF.pgterms:ebook.dcterms:creator.pgterms:agent',
-      labelAgent
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:edt.pgterms:agent',
-      labelAgent
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:trl.pgterms:agent',
-      labelAgent
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:ctb.pgterms:agent',
-      labelAgent
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:ill.pgterms:agent',
-      labelAgent
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:aui.pgterms:agent',
-      labelAgent
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.dcterms:creator',
-      labelResource
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:edt',
-      labelResource
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:trl',
-      labelResource
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:ctb',
-      labelResource
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:ill',
-      labelResource
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:aui',
-      labelResource
-    ],
-  ]);
+  const attrUnionDiscriminators: Map<
+    string,
+    (attrs: {[ k: string]: string }) => void
+  > = new Map();
 
   const arrays = new Set([
     'rdf.ebook.subject',
-    'rdf.ebook.aui',
-    'rdf.ebook.aui.agent.alias',
-    'rdf.ebook.aui.agent.webpage',
-    'rdf.ebook.illustrator',
-    'rdf.ebook.illustrator.agent.alias',
-    'rdf.ebook.illustrator.agent.webpage',
-    'rdf.ebook.contributor',
-    'rdf.ebook.contributor.agent.alias',
-    'rdf.ebook.contributor.agent.webpage',
-    'rdf.ebook.translator',
-    'rdf.ebook.translator.agent.alias',
-    'rdf.ebook.translator.agent.webpage',
-    'rdf.ebook.editor',
-    'rdf.ebook.editor.agent.alias',
-    'rdf.ebook.editor.agent.webpage',
-    'rdf.ebook.creator',
-    'rdf.ebook.creator.agent.alias',
-    'rdf.ebook.creator.agent.webpage',
     'rdf.ebook.files.file.format',
     'rdf.ebook.files.file.extent',
     'rdf.ebook.files.file.modified',
@@ -151,23 +87,69 @@ async function* rdfFileStream(stream: internal.Readable) {
       'rdf:RDF.pgterms:ebook.dcterms:hasFormat',
       'files'
     ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:edt',
-      'editor'
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:trl',
-      'translator'
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:ctb',
-      'contributor'
-    ],
-    [
-      'rdf:RDF.pgterms:ebook.marcrel:ill',
-      'illustrator'
-    ],
   ]);
+
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:aui'
+  );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.dcterms:creator'
+  );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:edt',
+    'editor'
+  );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:prf',
+    'performer'
+  );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:cmp',
+    'composer'
+  );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:lbt',
+    'librettist'
+  );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:ill',
+    'illustrator'
+  );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:ctb',
+    'contributor'
+  );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:trl',
+    'translator'
+  );
+
+  function addAgentField(originalPath: string, newName?: string) {
+    if (!newName) {
+      const matches = originalPath.match(/:(?<name>\w+)$/);
+
+      if (!matches || !matches.groups) {
+        throw new Error('no matches');
+      }
+
+      newName = matches.groups.name;
+    } else {
+      tagNameTransforms.set(originalPath, newName);
+    }
+
+    arrays.add(`rdf.ebook.${newName}`);
+    arrays.add(`rdf.ebook.${newName}.agent.alias`);
+    arrays.add(`rdf.ebook.${newName}.agent.webpage`);
+
+    attrUnionDiscriminators.set(
+      originalPath,
+      labelResource
+    );
+    attrUnionDiscriminators.set(
+      `${originalPath}.pgterms:agent`,
+      labelAgent
+    );
+  }
 
   const parser = new XMLParser({
     alwaysCreateTextNode: true,
