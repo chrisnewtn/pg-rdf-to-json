@@ -81,7 +81,7 @@ export interface TaggedAgent {
   birthdate?: number;
   deathdate?: number;
   alias?: string[];
-  webpage: string[];
+  webpage?: string[];
 }
 
 export interface FormattedResource {
@@ -162,9 +162,6 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
           properties: {
             about: { type: 'string' },
             name: { type: 'string' },
-            webpage: {
-              elements: { type: 'string' }
-            },
           },
           optionalProperties: {
             alias: {
@@ -172,6 +169,9 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
             },
             birthdate: { type: 'float64' },
             deathdate: { type: 'float64' },
+            webpage: {
+              elements: { type: 'string' }
+            },
           }
         },
         resource: {
