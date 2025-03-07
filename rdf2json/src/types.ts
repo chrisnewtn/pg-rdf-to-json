@@ -121,6 +121,7 @@ export interface FormattedEbook {
   type: string;
   creator: (TaggedAgent | TaggedResource)[],
   editor?: (TaggedAgent | TaggedResource)[],
+  translator?: (TaggedAgent | TaggedResource)[],
   files: File[]
 }
 
@@ -219,6 +220,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       elements: { type: 'string' }
     },
     editor: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
+    translator: {
       elements: {
         ref: 'agentOrResource'
       }
