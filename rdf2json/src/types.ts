@@ -212,6 +212,13 @@ export interface FormattedEbook {
    */
   compiler?: (TaggedAgent | TaggedResource)[],
 
+  /**
+   * A role that has no equivalent in the MARC list.
+   *
+   * @see {@link https://id.loc.gov/vocabulary/relators/oth.html}
+   */
+  other?: (TaggedAgent | TaggedResource)[],
+
   translator?: (TaggedAgent | TaggedResource)[],
 
   /**
@@ -351,6 +358,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       }
     },
     librettist: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
+    other: {
       elements: {
         ref: 'agentOrResource'
       }
