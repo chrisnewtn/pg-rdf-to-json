@@ -134,6 +134,10 @@ async function* rdfFileStream(stream: internal.Readable) {
     'rdf:RDF.pgterms:ebook.marcrel:com',
     'compiler'
   );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:oth',
+    'other'
+  );
 
   function addAgentField(originalPath: string, newName?: string) {
     if (!newName) {
