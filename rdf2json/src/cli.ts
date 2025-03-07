@@ -55,10 +55,6 @@ async function booksToFiles(
   const validate = ajv.compile(formattedEbookSchema);
 
   for await (const book of books) {
-    if (processed > 10) {
-      break;
-    }
-
     if (options.validate) {
       validate(book);
 
