@@ -124,6 +124,17 @@ export interface FormattedEbook {
   bookshelf: string[];
   type: string;
 
+  /**
+   * Author of introduction, etc.
+   *
+   * A person or organization responsible for an introduction, preface,
+   * foreword, or other critical introductory matter, but who is not the chief
+   * author.
+   *
+   * https://id.loc.gov/vocabulary/relators/aui.html
+   */
+  aui?: (TaggedAgent | TaggedResource)[],
+
   /** https://id.loc.gov/vocabulary/relators/ctb.html */
   contributor?: (TaggedAgent | TaggedResource)[],
 
@@ -225,6 +236,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
   optionalProperties: {
     alternative: {
       elements: { type: 'string' }
+    },
+    aui: {
+      elements: {
+        ref: 'agentOrResource'
+      }
     },
     contributor: {
       elements: {

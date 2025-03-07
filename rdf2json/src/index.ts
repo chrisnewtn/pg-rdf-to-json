@@ -80,6 +80,10 @@ async function* rdfFileStream(stream: internal.Readable) {
       labelAgent
     ],
     [
+      'rdf:RDF.pgterms:ebook.marcrel:aui.pgterms:agent',
+      labelAgent
+    ],
+    [
       'rdf:RDF.pgterms:ebook.dcterms:creator',
       labelResource
     ],
@@ -99,10 +103,17 @@ async function* rdfFileStream(stream: internal.Readable) {
       'rdf:RDF.pgterms:ebook.marcrel:ill',
       labelResource
     ],
+    [
+      'rdf:RDF.pgterms:ebook.marcrel:aui',
+      labelResource
+    ],
   ]);
 
   const arrays = new Set([
     'rdf.ebook.subject',
+    'rdf.ebook.aui',
+    'rdf.ebook.aui.agent.alias',
+    'rdf.ebook.aui.agent.webpage',
     'rdf.ebook.illustrator',
     'rdf.ebook.illustrator.agent.alias',
     'rdf.ebook.illustrator.agent.webpage',
