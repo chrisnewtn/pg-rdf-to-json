@@ -1,3 +1,5 @@
+import { type FormattedRDFFile, type UnformattedRDFFile } from './types.js';
+
 type Formatter = (key: string, val: any, path: string) => any;
 
 function formatInteger(key: string, val: any, path: string) {
@@ -72,7 +74,8 @@ function hoistSpecificObjectValue(keyToHoist: string) {
     }
 
     if (Object.keys(value).length !== 1) {
-      throw new TypeError(`Expected single key at ${path}`);
+      return formatObject(key, value, path);
+      // throw new TypeError(`Expected single key at ${path}. Got: ${Object.keys(value).join(', ')}`);
     }
 
     const [onlyKey] = Object.keys(value);
@@ -162,11 +165,47 @@ const formatters: Map<string,  Formatter> = new Map([
     hoistSpecificObjectValue('agent')
   ],
   [
+    'rdf.ebook.editor.agent.name',
+    formatStandaloneText
+  ],
+  [
+    'rdf.ebook.editor.agent.birthdate',
+    formatInteger
+  ],
+  [
+    'rdf.ebook.editor.agent.deathdate',
+    formatInteger
+  ],
+  [
+    'rdf.ebook.editor.agent.alias',
+    formatStandaloneText
+  ],
+  [
+    'rdf.ebook.editor.agent.webpage',
+    formatStandaloneResource
+  ],
+  [
+    'rdf.ebook.editor',
+    hoistSpecificObjectValue('agent')
+  ],
+  [
     'rdf.ebook.license',
     formatStandaloneResource
   ],
   [
     'rdf.ebook.title',
+    formatStandaloneText
+  ],
+  [
+    'rdf.ebook.marc260',
+    formatStandaloneText
+  ],
+  [
+    'rdf.ebook.marc300',
+    formatStandaloneText
+  ],
+  [
+    'rdf.ebook.marc508',
     formatStandaloneText
   ],
   [
@@ -178,6 +217,10 @@ const formatters: Map<string,  Formatter> = new Map([
     formatStandaloneText
   ],
   [
+    'rdf.ebook.tableOfContents',
+    formatStandaloneText
+  ],
+  [
     'rdf.ebook.publisher',
     formatStandaloneText
   ],
@@ -186,6 +229,16 @@ const formatters: Map<string,  Formatter> = new Map([
     formatDate
   ]
 ]);
+
+function formatObject(key: string, value: object, path: string) {
+  const rtn: { [key: string]: any } = {};
+
+    for (const [skey, val] of Object.entries(value)) {
+      rtn[skey] = formatValue(skey, val, `${path}.${skey}`);
+    }
+
+    return rtn;
+}
 
 function formatValue(key: string, value: any, path: string): any {
   if (Array.isArray(value)) {
@@ -199,14 +252,9 @@ function formatValue(key: string, value: any, path: string): any {
   }
 
   if (typeof value === 'object') {
-    const rtn: { [key: string]: any } = {};
-
-    for (const [skey, val] of Object.entries(value)) {
-      rtn[skey] = formatValue(skey, val, `${path}.${skey}`);
-    }
-
-    return rtn;
+    return formatObject(key, value, path);
   }
+
   return value;
 }
 
@@ -223,12 +271,12 @@ function postProccessObject(value: any) {
   return value;
 }
 
-export function formatObject(value: any) {
+export function formatRDFFile(value: UnformattedRDFFile) {
   const rtn: { [key: string]: any } = {};
 
   for (const [key, val] of Object.entries(value)) {
     rtn[key] = formatValue(key, val, key);
   }
 
-  return postProccessObject(rtn);
+  return postProccessObject(rtn) as FormattedRDFFile;
 }

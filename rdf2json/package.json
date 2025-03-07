@@ -17,6 +17,7 @@
     "dry-run": "tar -lxOf input-files/rdf-files.tar.bz2 | node --enable-source-maps dist/cli.js - output-data"
   },
   "dependencies": {
+    "ajv": "^8.17.1",
     "fast-xml-parser": "^5.0.7",
     "html-entities": "^2.5.2"
   },

@@ -1,9 +1,11 @@
 import { booksFromStream } from '../dist/index.js';
 import { before, describe, it } from 'node:test';
 import { equal, deepEqual } from 'node:assert/strict';
-import { Agent, Book, File, Resource } from '../dist/classes.js';
 import { createReadStream } from 'node:fs';
 import path from 'node:path';
+import { Ajv } from 'ajv/dist/jtd.js';
+import { formattedEbookSchema } from '../dist/types.js';
+import { extractProp } from '../dist/util.js';
 
 const id = '16264';
 const file = `pg${id}.rdf`;
@@ -11,13 +13,23 @@ const file = `pg${id}.rdf`;
 const pathToFixture = path.resolve(import.meta.dirname, 'fixtures', file);
 
 describe(file, () => {
-  /** @type {Book} */
+  /** @type {import('../dist/types.js').FormattedEbook} */
   let book;
 
   before(async () => {
     for await (const b of booksFromStream(createReadStream(pathToFixture))) {
       book = b;
     }
+  });
+
+  it('is a valid ebook', () => {
+    const ajv = new Ajv();
+    const validate = ajv.compile(formattedEbookSchema);
+    validate(book);
+    deepEqual((validate.errors || []).map(error => ({
+      ...error,
+      value: extractProp(book, error.instancePath)
+    })), []);
   });
 
   it(`has an "about of "ebooks/${id}"`, () => {
@@ -43,6 +55,7 @@ describe(file, () => {
   it('has various creator including "Bekker, Paul"', () => {
     deepEqual(book.creator, [
       {
+        kind: 'agent',
         about: '2009/agents/6582',
         name: 'Bekker, Paul',
         birthdate: 1882,
@@ -52,6 +65,7 @@ describe(file, () => {
         ],
       },
       {
+        kind: 'agent',
         about: '2009/agents/6585',
         name: 'Briefs, Goetz A. (Goetz Antony)',
         birthdate: 1889,
@@ -64,6 +78,7 @@ describe(file, () => {
         ],
       },
       {
+        kind: 'agent',
         about: '2009/agents/6583',
         name: 'Scheler, Max',
         birthdate: 1874,
@@ -77,6 +92,7 @@ describe(file, () => {
         ],
       },
       {
+        kind: 'agent',
         about: '2009/agents/6584',
         name: 'Sommerfeld, Arnold',
         birthdate: 1868,
@@ -90,6 +106,7 @@ describe(file, () => {
         ],
       },
       {
+        kind: 'resource',
         resource: '2009/agents/6581'
       },
     ]);

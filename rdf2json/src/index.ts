@@ -2,10 +2,9 @@ import readline from 'node:readline/promises';
 import { XMLParser } from 'fast-xml-parser';
 import { spawn } from 'node:child_process';
 import internal from 'node:stream';
-import { type RDFFile } from './types.js';
-import { Book } from './classes.js';
+import { type UnformattedRDFFile } from './types.js';
 import { inspect } from 'node:util';
-import { formatObject } from './formatter.js';
+import { formatRDFFile } from './formatter.js';
 
 async function* processArchive(archiveStream: internal.Readable) {
   let file = '';
@@ -49,14 +48,48 @@ async function* rdfFileStream(stream: internal.Readable) {
   const tagNameMap: Map<string, string> = new Map();
   const attrNameMap: Map<string, string> = new Map();
 
+  const attrUnionDiscriminators = new Map([
+    [
+      'rdf:RDF.pgterms:ebook.dcterms:creator.pgterms:agent',
+      (attrs: {[ k: string]: string }) => {
+        attrs.kind = 'agent';
+      }
+    ],
+    [
+      'rdf:RDF.pgterms:ebook.marcrel:edt.pgterms:agent',
+      (attrs: {[ k: string]: string }) => {
+        attrs.kind = 'agent';
+      }
+    ],
+    [
+      'rdf:RDF.pgterms:ebook.dcterms:creator',
+      (attrs: {[ k: string]: string }) => {
+        if (Object.hasOwn(attrs, 'resource')) {
+          attrs.kind = 'resource';
+        }
+      }
+    ],
+    [
+      'rdf:RDF.pgterms:ebook.marcrel:edt',
+      (attrs: {[ k: string]: string }) => {
+        if (Object.hasOwn(attrs, 'resource')) {
+          attrs.kind = 'resource';
+        }
+      }
+    ],
+  ]);
+
   const arrays = new Set([
     'rdf.ebook.subject',
+    'rdf.ebook.editor',
+    'rdf.ebook.editor.agent.alias',
+    'rdf.ebook.editor.agent.webpage',
     'rdf.ebook.creator',
     'rdf.ebook.creator.agent.alias',
     'rdf.ebook.creator.agent.webpage',
-    'rdf.ebook.hasformat.file.format',
-    'rdf.ebook.hasformat.file.extent',
-    'rdf.ebook.hasformat.file.modified',
+    'rdf.ebook.files.file.format',
+    'rdf.ebook.files.file.extent',
+    'rdf.ebook.files.file.modified',
     'rdf.ebook.description',
     'rdf.ebook.language',
     'rdf.ebook.alternative',
@@ -75,45 +108,21 @@ async function* rdfFileStream(stream: internal.Readable) {
       'rdf:RDF.pgterms:ebook.dcterms:hasFormat',
       'files'
     ],
-    // [
-    //   'rdf:RDF.pgterms:ebook.dcterms:language',
-    //   'languages'
-    // ]
+    [
+      'rdf:RDF.pgterms:ebook.marcrel:edt',
+      'editor'
+    ],
   ]);
 
   const parser = new XMLParser({
-    // ignoreAttributes: false,
     alwaysCreateTextNode: true,
     ignoreDeclaration: true,
     trimValues: true,
-    // textNodeName: 'text',
     isArray(tagName, jPath, isLeafNode, isAttribute) {
-      // console.log(isAttribute, jPath);
       return arrays.has(jPath);
     },
     ignoreAttributes(attrName, jPath) {
       return attrName.startsWith('xmlns:');
-    },
-    transformTagName(tagName: string) {
-      return tagName;
-      // if (manualTagNameMap.has(tagName)) {
-      //   return manualTagNameMap.get(tagName) as string;
-      // }
-      // const matches = tagNameMatcher.exec(tagName);
-
-      // if (matches === null || !matches.groups) {
-      //   return tagName;
-      // }
-
-      // const namespace = tagNameMap.get(matches.groups.name);
-
-      // if (!namespace) {
-      //   tagNameMap.set(matches.groups.name, matches.groups.ns);
-      // } else if (namespace !== matches.groups.ns) {
-      //   return `${matches.groups.ns}${capitalize(matches.groups.name)}`;
-      // }
-
-      // return lowerFirstChar(matches.groups.name);
     },
     transformAttributeName(attrName: string) {
       if (manualAttrNameMap.has(attrName)) {
@@ -148,6 +157,12 @@ async function* rdfFileStream(stream: internal.Readable) {
     updateTag(tagName, jPath, attrs) {
       const matches = tagNameMatcher.exec(tagName);
 
+      const unionDiscriminator = attrUnionDiscriminators.get(jPath);
+
+      if (unionDiscriminator) {
+        unionDiscriminator(attrs);
+      }
+
       if (matches !== null && matches.groups) {
         return tagNameTransforms.get(jPath) ||
           lowerFirstChar(matches.groups.name);
@@ -158,14 +173,12 @@ async function* rdfFileStream(stream: internal.Readable) {
   });
 
   for await (const file of processArchive(stream)) {
-    const parsed = parser.parse(file);
-    yield parsed;
+    yield parser.parse(file) as UnformattedRDFFile;
   }
 }
 
 export async function* booksFromStream(stream: internal.Readable) {
   for await (const file of rdfFileStream(stream)) {
-    // console.log(inspect(file, {depth: Infinity, colors: true}));
     const eBook = file.rdf.ebook;
 
     try {
@@ -175,9 +188,9 @@ export async function* booksFromStream(stream: internal.Readable) {
       if (!Object.hasOwn(eBook, 'type')) {
         continue;
       }
-      yield formatObject(file).rdf.ebook;
+      yield formatRDFFile(file).rdf.ebook;
     } catch (cause) {
-      const bookId = eBook.id;
+      const bookId = eBook.about;
       throw new Error(`Problem parsing "${bookId}"`, {cause});
     }
   }
