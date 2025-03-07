@@ -247,6 +247,30 @@ const formatters: Map<string,  Formatter> = new Map([
     hoistSpecificObjectValue('agent')
   ],
   [
+    'rdf.ebook.illustrator.agent.name',
+    formatStandaloneText
+  ],
+  [
+    'rdf.ebook.illustrator.agent.birthdate',
+    formatInteger
+  ],
+  [
+    'rdf.ebook.illustrator.agent.deathdate',
+    formatInteger
+  ],
+  [
+    'rdf.ebook.illustrator.agent.alias',
+    formatStandaloneText
+  ],
+  [
+    'rdf.ebook.illustrator.agent.webpage',
+    formatStandaloneResource
+  ],
+  [
+    'rdf.ebook.illustrator',
+    hoistSpecificObjectValue('agent')
+  ],
+  [
     'rdf.ebook.license',
     formatStandaloneResource
   ],
