@@ -118,6 +118,7 @@ export interface FormattedEbook {
   marc300?: string;
   marc508?: string;
   marc520: string;
+  marc901?: string;
   tableOfContents?: string;
   language: string[];
   subject: string[];
@@ -271,6 +272,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     marc260: { type: 'string' },
     marc300: { type: 'string' },
     marc508: { type: 'string' },
+    marc901: { type: 'string' },
     tableOfContents: { type: 'string' },
   }
 };
