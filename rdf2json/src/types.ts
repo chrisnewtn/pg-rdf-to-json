@@ -119,7 +119,7 @@ export interface FormattedEbook {
   subject: string[];
   bookshelf: string[];
   type: string;
-  creator: (TaggedAgent | TaggedResource)[],
+  creator?: (TaggedAgent | TaggedResource)[],
   editor?: (TaggedAgent | TaggedResource)[],
   translator?: (TaggedAgent | TaggedResource)[],
   files: File[]
@@ -204,11 +204,6 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       elements: { type: 'string' }
     },
     type: { type: 'string' },
-    creator: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
     files: {
       elements: {
         ref: 'file'
@@ -218,6 +213,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
   optionalProperties: {
     alternative: {
       elements: { type: 'string' }
+    },
+    creator: {
+      elements: {
+        ref: 'agentOrResource'
+      }
     },
     editor: {
       elements: {
