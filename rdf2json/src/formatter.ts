@@ -213,6 +213,7 @@ const formatters: Map<string,  Formatter> = new Map([
   ...agentRules('rdf.ebook.aui'),
   ...agentRules('rdf.ebook.arranger'),
   ...agentRules('rdf.ebook.unk'),
+  ...agentRules('rdf.ebook.compiler'),
 ]);
 
 function agentRules(path: string): [string, Formatter][] {
