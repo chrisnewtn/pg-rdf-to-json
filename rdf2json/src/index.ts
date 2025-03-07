@@ -130,6 +130,10 @@ async function* rdfFileStream(stream: internal.Readable) {
     'rdf:RDF.pgterms:ebook.marcrel:arr',
     'arranger'
   );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:com',
+    'compiler'
+  );
 
   function addAgentField(originalPath: string, newName?: string) {
     if (!newName) {

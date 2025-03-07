@@ -203,6 +203,15 @@ export interface FormattedEbook {
    */
   arranger?: (TaggedAgent | TaggedResource)[],
 
+  /**
+   * A person, family, or organization responsible for creating a new work
+   * (e.g., a bibliography, a directory) through the act of compilation, e.g.,
+   * selecting, arranging, aggregating, and editing data, information, etc.
+   *
+   * @see {@link https://id.loc.gov/vocabulary/relators/com.html}
+   */
+  compiler?: (TaggedAgent | TaggedResource)[],
+
   translator?: (TaggedAgent | TaggedResource)[],
 
   /**
@@ -304,6 +313,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       }
     },
     aui: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
+    compiler: {
       elements: {
         ref: 'agentOrResource'
       }
