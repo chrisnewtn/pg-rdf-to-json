@@ -116,6 +116,13 @@ export interface FormattedEbook {
 
   marc260?: string;
   marc300?: string;
+
+  /**
+   * Series Statement/Added Entry-Title [OBSOLETE, 2008]
+   * @see {@link https://www.loc.gov/marc/bibliographic/bd4xx.html}
+   */
+  marc440?: string;
+
   marc508?: string;
   marc520: string;
   marc901?: string;
@@ -271,6 +278,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     marc010: { type: 'float64' },
     marc260: { type: 'string' },
     marc300: { type: 'string' },
+    marc440: { type: 'string' },
     marc508: { type: 'string' },
     marc901: { type: 'string' },
     tableOfContents: { type: 'string' },
