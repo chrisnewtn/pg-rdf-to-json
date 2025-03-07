@@ -129,6 +129,10 @@ export interface FormattedEbook {
 
   creator?: (TaggedAgent | TaggedResource)[],
   editor?: (TaggedAgent | TaggedResource)[],
+
+  /** https://id.loc.gov/vocabulary/relators/ill.html */
+  illustrator?: (TaggedAgent | TaggedResource)[],
+
   translator?: (TaggedAgent | TaggedResource)[],
   files: File[]
 }
@@ -233,6 +237,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       }
     },
     editor: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
+    illustrator: {
       elements: {
         ref: 'agentOrResource'
       }

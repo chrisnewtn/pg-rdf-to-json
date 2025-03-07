@@ -27,6 +27,16 @@ async function* processArchive(archiveStream: internal.Readable) {
   }
 }
 
+function labelAgent(attrs: {[ k: string]: string }) {
+  attrs.kind = 'agent';
+}
+
+function labelResource(attrs: {[ k: string]: string }) {
+  if (Object.hasOwn(attrs, 'resource')) {
+    attrs.kind = 'resource';
+  }
+}
+
 async function* rdfFileStream(stream: internal.Readable) {
   const tagNameMatcher = /^(?<ns>\w+):(?<name>\w+)$/;
   const attrNameMatcher = /^@_(?<ns>\w+):(?<name>\w+)$/
@@ -51,64 +61,51 @@ async function* rdfFileStream(stream: internal.Readable) {
   const attrUnionDiscriminators = new Map([
     [
       'rdf:RDF.pgterms:ebook.dcterms:creator.pgterms:agent',
-      (attrs: {[ k: string]: string }) => {
-        attrs.kind = 'agent';
-      }
+      labelAgent
     ],
     [
       'rdf:RDF.pgterms:ebook.marcrel:edt.pgterms:agent',
-      (attrs: {[ k: string]: string }) => {
-        attrs.kind = 'agent';
-      }
+      labelAgent
     ],
     [
       'rdf:RDF.pgterms:ebook.marcrel:trl.pgterms:agent',
-      (attrs: {[ k: string]: string }) => {
-        attrs.kind = 'agent';
-      }
+      labelAgent
     ],
     [
       'rdf:RDF.pgterms:ebook.marcrel:ctb.pgterms:agent',
-      (attrs: {[ k: string]: string }) => {
-        attrs.kind = 'agent';
-      }
+      labelAgent
+    ],
+    [
+      'rdf:RDF.pgterms:ebook.marcrel:ill.pgterms:agent',
+      labelAgent
     ],
     [
       'rdf:RDF.pgterms:ebook.dcterms:creator',
-      (attrs: {[ k: string]: string }) => {
-        if (Object.hasOwn(attrs, 'resource')) {
-          attrs.kind = 'resource';
-        }
-      }
+      labelResource
     ],
     [
       'rdf:RDF.pgterms:ebook.marcrel:edt',
-      (attrs: {[ k: string]: string }) => {
-        if (Object.hasOwn(attrs, 'resource')) {
-          attrs.kind = 'resource';
-        }
-      }
+      labelResource
     ],
     [
       'rdf:RDF.pgterms:ebook.marcrel:trl',
-      (attrs: {[ k: string]: string }) => {
-        if (Object.hasOwn(attrs, 'resource')) {
-          attrs.kind = 'resource';
-        }
-      }
+      labelResource
     ],
     [
       'rdf:RDF.pgterms:ebook.marcrel:ctb',
-      (attrs: {[ k: string]: string }) => {
-        if (Object.hasOwn(attrs, 'resource')) {
-          attrs.kind = 'resource';
-        }
-      }
+      labelResource
+    ],
+    [
+      'rdf:RDF.pgterms:ebook.marcrel:ill',
+      labelResource
     ],
   ]);
 
   const arrays = new Set([
     'rdf.ebook.subject',
+    'rdf.ebook.illustrator',
+    'rdf.ebook.illustrator.agent.alias',
+    'rdf.ebook.illustrator.agent.webpage',
     'rdf.ebook.contributor',
     'rdf.ebook.contributor.agent.alias',
     'rdf.ebook.contributor.agent.webpage',
@@ -154,6 +151,10 @@ async function* rdfFileStream(stream: internal.Readable) {
     [
       'rdf:RDF.pgterms:ebook.marcrel:ctb',
       'contributor'
+    ],
+    [
+      'rdf:RDF.pgterms:ebook.marcrel:ill',
+      'illustrator'
     ],
   ]);
 
