@@ -190,6 +190,19 @@ export interface FormattedEbook {
    */
   librettist?: (TaggedAgent | TaggedResource)[],
 
+  /**
+   * A person, family, or organization contributing to a musical work by
+   * rewriting the composition for a medium of performance different from that
+   * for which the work was originally intended, or modifying the work for the
+   * same medium of performance, etc., such that the musical substance of the
+   * original composition remains essentially unchanged. For extensive
+   * modification that effectively results in the creation of a new musical
+   * work, see composer.
+   *
+   * @see {@link https://id.loc.gov/vocabulary/relators/arr.html}
+   */
+  arranger?: (TaggedAgent | TaggedResource)[],
+
   translator?: (TaggedAgent | TaggedResource)[],
   files: File[]
 }
@@ -281,6 +294,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
   optionalProperties: {
     alternative: {
       elements: { type: 'string' }
+    },
+    arranger: {
+      elements: {
+        ref: 'agentOrResource'
+      }
     },
     aui: {
       elements: {
