@@ -123,6 +123,10 @@ export interface FormattedEbook {
   subject: string[];
   bookshelf: string[];
   type: string;
+
+  /** https://id.loc.gov/vocabulary/relators/ctb.html */
+  contributor?: (TaggedAgent | TaggedResource)[],
+
   creator?: (TaggedAgent | TaggedResource)[],
   editor?: (TaggedAgent | TaggedResource)[],
   translator?: (TaggedAgent | TaggedResource)[],
@@ -217,6 +221,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
   optionalProperties: {
     alternative: {
       elements: { type: 'string' }
+    },
+    contributor: {
+      elements: {
+        ref: 'agentOrResource'
+      }
     },
     creator: {
       elements: {
