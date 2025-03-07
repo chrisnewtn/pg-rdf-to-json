@@ -62,6 +62,12 @@ async function* rdfFileStream(stream: internal.Readable) {
       }
     ],
     [
+      'rdf:RDF.pgterms:ebook.marcrel:trl.pgterms:agent',
+      (attrs: {[ k: string]: string }) => {
+        attrs.kind = 'agent';
+      }
+    ],
+    [
       'rdf:RDF.pgterms:ebook.dcterms:creator',
       (attrs: {[ k: string]: string }) => {
         if (Object.hasOwn(attrs, 'resource')) {
@@ -77,10 +83,21 @@ async function* rdfFileStream(stream: internal.Readable) {
         }
       }
     ],
+    [
+      'rdf:RDF.pgterms:ebook.marcrel:trl',
+      (attrs: {[ k: string]: string }) => {
+        if (Object.hasOwn(attrs, 'resource')) {
+          attrs.kind = 'resource';
+        }
+      }
+    ],
   ]);
 
   const arrays = new Set([
     'rdf.ebook.subject',
+    'rdf.ebook.translator',
+    'rdf.ebook.translator.agent.alias',
+    'rdf.ebook.translator.agent.webpage',
     'rdf.ebook.editor',
     'rdf.ebook.editor.agent.alias',
     'rdf.ebook.editor.agent.webpage',
@@ -111,6 +128,10 @@ async function* rdfFileStream(stream: internal.Readable) {
     [
       'rdf:RDF.pgterms:ebook.marcrel:edt',
       'editor'
+    ],
+    [
+      'rdf:RDF.pgterms:ebook.marcrel:trl',
+      'translator'
     ],
   ]);
 
