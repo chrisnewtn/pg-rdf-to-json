@@ -3,32 +3,14 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { booksFromStream, booksFromArchive } from './index.js';
-// import { RDFFile } from './types.js';
+import { type FormattedEbook, formattedEbookSchema } from './types.js';
+import { parseArgs, inspect } from 'node:util';
+import { Ajv } from 'ajv/dist/jtd.js';
+import { extractProp } from './util.js';
 
 function setToArray(_key: any, val: any) {
   if (val instanceof Set) {
     return Array.from(val);
-  }
-  return val;
-}
-
-function simplify(key: string, val: any) {
-  if (val instanceof Set) {
-    return Array.from(val);
-  }
-  if (typeof val?.['#text'] === 'string') {
-    switch (val?.datatype) {
-      case 'http://www.w3.org/2001/XMLSchema#integer':
-        return parseInt(val['#text'], 10);
-      case 'http://www.w3.org/2001/XMLSchema#dateTime':
-        return new Date(val['#text']).toJSON();
-      case 'http://www.w3.org/2001/XMLSchema#date':
-        return val['#text'];
-      case 'http://purl.org/dc/terms/RFC4646':
-        return val['#text'];
-      case 'http://purl.org/dc/terms/IMT':
-        return val['#text'];
-    }
   }
   return val;
 }
@@ -41,15 +23,61 @@ function log(contents: string) {
   process.stdout.write('\n');
 }
 
-async function booksToFiles(books: AsyncGenerator<any>, output: string) {
+function logError(contents: string): Promise<void> {
+  return new Promise((resolve, reject) => {
+    process.stderr.write(`${contents}\n`, err => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    })
+  });
+}
+
+async function booksToFiles(
+  books: AsyncGenerator<FormattedEbook>,
+  {
+    options,
+    output
+  }: {
+    options: {
+      validate?: boolean
+    },
+    output: string
+  }
+) {
   let processed = 0;
 
   const createdDirectories = new Set();
+
+  const ajv = new Ajv();
+  const validate = ajv.compile(formattedEbookSchema);
 
   for await (const book of books) {
     if (processed > 10) {
       break;
     }
+
+    if (options.validate) {
+      validate(book);
+
+      if (Array.isArray(validate.errors)) {
+        const detailedErrors = validate.errors.map(error => ({
+          ...error,
+          value: extractProp(book, error.instancePath)
+        }));
+
+        await logError(`Validation error for book: ${book.about}`);
+
+        for (const error of detailedErrors) {
+          await logError(inspect(error, {colors: true, depth: Infinity}));
+        }
+
+        process.exit(1);
+      }
+    }
+
     const bookId = book.about;
     const newFile = path.join(output, `${bookId}.json`);
     const newDir = path.dirname(newFile);
@@ -67,21 +95,31 @@ async function booksToFiles(books: AsyncGenerator<any>, output: string) {
   }
 }
 
-async function booksToStdout(books: AsyncGenerator<any>) {
+async function booksToStdout(books: AsyncGenerator<FormattedEbook>) {
   for await (const book of books) {
-    process.stdout.write(JSON.stringify(book, simplify));
+    process.stdout.write(JSON.stringify(book, setToArray));
     process.stdout.write('\n');
   }
 }
 
-const [input, output] = process.argv.slice(2);
+const {
+  values: options,
+  positionals: [input, output]
+} = parseArgs({
+  options: {
+    validate: {
+      type: 'boolean'
+    },
+  },
+  allowPositionals: true,
+});
 
 const books = input !== '-' ?
   booksFromArchive(input) :
   booksFromStream(process.stdin);
 
 if (output) {
-  await booksToFiles(books, output);
+  await booksToFiles(books, {options, output});
 } else {
   await booksToStdout(books);
 }
