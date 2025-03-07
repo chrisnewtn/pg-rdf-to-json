@@ -2,11 +2,21 @@ import { type FormattedRDFFile, type UnformattedRDFFile } from './types.js';
 
 type Formatter = (key: string, val: any, path: string) => any;
 
+function formatNumber(key: string, val: any, path: string) {
+  const parsed = parseInt(val?.['#text'], 10);
+
+  if (Number.isNaN(parsed)) {
+    new TypeError(`Expected number at ${path}. Got ${val?.['#text']}`);
+  }
+
+  return parsed;
+}
+
 function formatInteger(key: string, val: any, path: string) {
   if (val?.datatype !== 'http://www.w3.org/2001/XMLSchema#integer') {
     throw new TypeError(`Expected integer datatype at ${path}.datatype`);
   }
-  return val?.['#text'] ? parseInt(val?.['#text'], 10) : null;
+  return formatNumber(key, val, path);
 }
 
 function formatDatetime(key: string, val: any, path: string) {
@@ -219,6 +229,10 @@ const formatters: Map<string,  Formatter> = new Map([
   [
     'rdf.ebook.title',
     formatStandaloneText
+  ],
+  [
+    'rdf.ebook.marc010',
+    formatNumber
   ],
   [
     'rdf.ebook.marc260',

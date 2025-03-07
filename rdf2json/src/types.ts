@@ -110,6 +110,10 @@ export interface FormattedEbook {
   issued: string;
   rights: string;
   downloads: number;
+
+  /** https://www.loc.gov/marc/authority/ad010.html */
+  marc010?: number;
+
   marc260?: string;
   marc300?: string;
   marc508?: string;
@@ -229,6 +233,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
         ref: 'agentOrResource'
       }
     },
+    marc010: { type: 'float64' },
     marc260: { type: 'string' },
     marc300: { type: 'string' },
     marc508: { type: 'string' },
