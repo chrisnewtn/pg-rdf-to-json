@@ -204,6 +204,12 @@ export interface FormattedEbook {
   arranger?: (TaggedAgent | TaggedResource)[],
 
   translator?: (TaggedAgent | TaggedResource)[],
+
+  /**
+   * This appears to be short for "Unknown".
+   */
+  unk?: (TaggedAgent | TaggedResource)[],
+
   files: File[]
 }
 
@@ -341,6 +347,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       }
     },
     translator: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
+    unk: {
       elements: {
         ref: 'agentOrResource'
       }
