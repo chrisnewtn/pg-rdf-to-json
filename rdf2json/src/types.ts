@@ -104,7 +104,7 @@ export interface FormattedEbook {
   about: string;
   title: string;
   alternative?: string[];
-  description: string[];
+  description?: string[];
   publisher: string;
   license: string;
   issued: string;
@@ -267,9 +267,6 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
   properties: {
     about: { type: 'string' },
     title: { type: 'string' },
-    description: {
-      elements: { type: 'string' }
-    },
     publisher: { type: 'string' },
     license: { type: 'string' },
     issued: { type: 'string' },
@@ -319,6 +316,9 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       elements: {
         ref: 'agentOrResource'
       }
+    },
+    description: {
+      elements: { type: 'string' }
     },
     editor: {
       elements: {
