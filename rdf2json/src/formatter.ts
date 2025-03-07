@@ -271,6 +271,30 @@ const formatters: Map<string,  Formatter> = new Map([
     hoistSpecificObjectValue('agent')
   ],
   [
+    'rdf.ebook.aui.agent.name',
+    formatStandaloneText
+  ],
+  [
+    'rdf.ebook.aui.agent.birthdate',
+    formatInteger
+  ],
+  [
+    'rdf.ebook.aui.agent.deathdate',
+    formatInteger
+  ],
+  [
+    'rdf.ebook.aui.agent.alias',
+    formatStandaloneText
+  ],
+  [
+    'rdf.ebook.aui.agent.webpage',
+    formatStandaloneResource
+  ],
+  [
+    'rdf.ebook.aui',
+    hoistSpecificObjectValue('agent')
+  ],
+  [
     'rdf.ebook.license',
     formatStandaloneResource
   ],
