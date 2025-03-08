@@ -225,6 +225,7 @@ const formatters: Map<string,  Formatter> = new Map([
   ...agentRules('rdf.ebook.compiler'),
   ...agentRules('rdf.ebook.other'),
   ...agentRules('rdf.ebook.conductor'),
+  ...agentRules('rdf.ebook.commentator'),
 ]);
 
 function agentRules(path: string): [string, Formatter][] {

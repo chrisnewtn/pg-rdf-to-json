@@ -148,6 +148,10 @@ async function* rdfFileStream(stream: internal.Readable) {
     'rdf:RDF.pgterms:ebook.marcrel:cnd',
     'conductor'
   );
+  addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:cmm',
+    'commentator'
+  );
 
   function addAgentField(originalPath: string, newName?: string) {
     if (!newName) {
