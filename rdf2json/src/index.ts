@@ -72,6 +72,7 @@ async function* rdfFileStream(stream: internal.Readable) {
     'rdf.ebook.language',
     'rdf.ebook.alternative',
     'rdf.ebook.bookshelf',
+    'rdf.ebook.marc901',
   ]);
 
   const tagNameTransforms = new Map([
