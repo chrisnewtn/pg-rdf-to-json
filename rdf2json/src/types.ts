@@ -137,6 +137,12 @@ export interface FormattedEbook {
   marc520?: string;
 
   marc901?: string;
+
+  /**
+   * Appears to be used to store the title.
+   */
+  marc905?: string;
+
   tableOfContents?: string;
   language: string[];
   subject: string[];
@@ -403,6 +409,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     marc508: { type: 'string' },
     marc520: { type: 'string' },
     marc901: { type: 'string' },
+    marc905: { type: 'string' },
     tableOfContents: { type: 'string' },
   }
 };
