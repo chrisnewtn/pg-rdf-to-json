@@ -95,6 +95,9 @@ async function* rdfFileStream(stream: internal.Readable) {
     'rdf:RDF.pgterms:ebook.marcrel:aui'
   );
   addAgentField(
+    'rdf:RDF.pgterms:ebook.marcrel:aft'
+  );
+  addAgentField(
     'rdf:RDF.pgterms:ebook.dcterms:creator'
   );
   addAgentField(
