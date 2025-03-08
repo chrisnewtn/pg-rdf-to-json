@@ -115,6 +115,9 @@ export interface FormattedEbook {
   /** https://www.loc.gov/marc/authority/ad010.html */
   marc010?: number;
 
+  /** @see {@link https://www.loc.gov/marc/bibliographic/bd250.html} */
+  marc250?: string;
+
   marc260?: string;
   marc300?: string;
 
@@ -287,6 +290,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       }
     },
     marc010: { type: 'float64' },
+    marc250: { type: 'string' },
     marc260: { type: 'string' },
     marc300: { type: 'string' },
     marc440: { type: 'string' },
