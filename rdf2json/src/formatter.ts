@@ -1,8 +1,20 @@
+import { relators } from './input-schemas/relators.js';
 import { type FormattedRDFFile, type UnformattedRDFFile } from './types.js';
 
-type Formatter = (key: string, val: any, path: string) => any;
+const shared: WeakMap<UnformattedRDFFile, any[]> = new WeakMap();
 
-function formatNumber(key: string, val: any, path: string) {
+type Formatter = (
+  key: string,
+  val: any,
+  path: string,
+  original: UnformattedRDFFile
+) => any;
+
+function formatNumber(
+  key: string,
+  val: any,
+  path: string
+) {
   const parsed = parseInt(val?.['#text'], 10);
 
   if (Number.isNaN(parsed)) {
@@ -12,28 +24,44 @@ function formatNumber(key: string, val: any, path: string) {
   return parsed;
 }
 
-function formatInteger(key: string, val: any, path: string) {
+function formatInteger(
+  key: string,
+  val: any,
+  path: string
+) {
   if (val?.datatype !== 'http://www.w3.org/2001/XMLSchema#integer') {
     throw new TypeError(`Expected integer datatype at ${path}.datatype`);
   }
   return formatNumber(key, val, path);
 }
 
-function formatDatetime(key: string, val: any, path: string) {
+function formatDatetime(
+  key: string,
+  val: any,
+  path: string
+) {
   if (val?.datatype !== 'http://www.w3.org/2001/XMLSchema#dateTime') {
     throw new TypeError(`Expected dateTime datatype at ${path}.datatype`);
   }
   return new Date(val?.['#text']);
 }
 
-function formatDate(key: string, val: any, path: string) {
+function formatDate(
+  key: string,
+  val: any,
+  path: string
+) {
   if (val?.datatype !== 'http://www.w3.org/2001/XMLSchema#date') {
     throw new TypeError(`Expected date datatype at ${path}.datatype`);
   }
   return val?.['#text'];
 }
 
-function formatDescription(key: string, val: any, path: string) {
+function formatDescription(
+  key: string,
+  val: any,
+  path: string
+) {
   const value = val?.description?.value?.['#text'];
 
   if (!value) {
@@ -43,7 +71,11 @@ function formatDescription(key: string, val: any, path: string) {
   return value;
 }
 
-function formatStandaloneText(key: string, val: any, path: string) {
+function formatStandaloneText(
+  key: string,
+  val: any,
+  path: string
+) {
   if (typeof val !== 'object' ||
     Object.keys(val).length !== 1 ||
     typeof val?.['#text'] !== 'string'
@@ -53,7 +85,11 @@ function formatStandaloneText(key: string, val: any, path: string) {
   return val?.['#text'];
 }
 
-function formatStandaloneResource(key: string, val: any, path: string) {
+function formatStandaloneResource(
+  key: string,
+  val: any,
+  path: string
+) {
   if (typeof val !== 'object' ||
     Object.keys(val).length !== 1 ||
     typeof val?.resource !== 'string'
@@ -63,7 +99,12 @@ function formatStandaloneResource(key: string, val: any, path: string) {
   return val?.resource;
 }
 
-function hoistStandaloneObjectValue(key: string, value: any, path: string) {
+function hoistStandaloneObjectValue(
+  key: string,
+  value: any,
+  path: string,
+  original: UnformattedRDFFile
+) {
   if (typeof value !== 'object') {
     throw new TypeError(`Expected object at ${path}`);
   }
@@ -74,34 +115,60 @@ function hoistStandaloneObjectValue(key: string, value: any, path: string) {
 
   const [onlyKey] = Object.keys(value);
 
-  return formatValue(onlyKey, value[onlyKey], `${path}.${onlyKey}`);
+  return formatValue(onlyKey, value[onlyKey], `${path}.${onlyKey}`, original);
 }
 
-function hoistSpecificObjectValue(keyToHoist: string) {
-  return function hoist(key: string, value: any, path: string) {
-    if (typeof value !== 'object') {
-      throw new TypeError(`Expected object at ${path}`);
-    }
-
-    if (Object.keys(value).length !== 1) {
-      return formatObject(key, value, path);
-      // throw new TypeError(`Expected single key at ${path}. Got: ${Object.keys(value).join(', ')}`);
-    }
-
-    const [onlyKey] = Object.keys(value);
-
-    if (onlyKey !== keyToHoist) {
-      return value;
-    }
-    return formatValue(onlyKey, value[onlyKey], `${path}.${onlyKey}`);
+function formatAgent(
+  key: string,
+  value: any,
+  path: string,
+  original: UnformattedRDFFile
+) {
+  if (typeof value !== 'object') {
+    throw new TypeError(`Expected object at ${path}`);
   }
+
+  if (Object.keys(value).length !== 1) {
+    return formatObject(key, value, path, original);
+  }
+
+  const [onlyKey] = Object.keys(value);
+
+  if (onlyKey !== 'agent') {
+    return value;
+  }
+
+  const formattedAgent = formatValue(
+    onlyKey,
+    value[onlyKey],
+    `${path}.${onlyKey}`,
+    original
+  );
+
+  if (relators.has(key)) {
+    formattedAgent.code = key;
+  }
+
+  if (shared.has(original)) {
+    shared.get(original)?.push(formattedAgent);
+  } else {
+    shared.set(original, [formattedAgent]);
+  }
+
+  return formattedAgent;
 }
 
-function formatLanguage(key: string, val: any, path: string) {
+function formatLanguage(
+  key: string,
+  val: any,
+  path: string
+) {
   const value = val?.description?.value;
+
   if (value?.datatype !== 'http://purl.org/dc/terms/RFC4646') {
     throw new TypeError(`Expected RFC4646 datatype at ${path}.description.value.datatype`);
   }
+
   return value?.['#text'];
 }
 
@@ -210,29 +277,20 @@ const formatters: Map<string,  Formatter> = new Map([
     'rdf.ebook.issued',
     formatDate
   ],
-  ...agentRules('rdf.ebook.performer'),
-  ...agentRules('rdf.ebook.composer'),
-  ...agentRules('rdf.ebook.librettist'),
-  ...agentRules('rdf.ebook.illustrator'),
-  ...agentRules('rdf.ebook.contributor'),
-  ...agentRules('rdf.ebook.translator'),
-  ...agentRules('rdf.ebook.editor'),
   ...agentRules('rdf.ebook.creator'),
-  ...agentRules('rdf.ebook.aft'),
-  ...agentRules('rdf.ebook.aui'),
-  ...agentRules('rdf.ebook.arranger'),
-  ...agentRules('rdf.ebook.unk'),
-  ...agentRules('rdf.ebook.compiler'),
-  ...agentRules('rdf.ebook.other'),
-  ...agentRules('rdf.ebook.conductor'),
-  ...agentRules('rdf.ebook.commentator'),
 ]);
+
+for (const [relator] of relators) {
+  for (const [path, formatter] of agentRules(`rdf.ebook.${relator}`)) {
+    formatters.set(path, formatter);
+  }
+}
 
 function agentRules(path: string): [string, Formatter][] {
   return [
     [
       path,
-      hoistSpecificObjectValue('agent')
+      formatAgent,
     ],
     [
       `${path}.agent.name`,
@@ -257,58 +315,84 @@ function agentRules(path: string): [string, Formatter][] {
   ];
 }
 
-function formatObject(key: string, value: object, path: string) {
+function formatObject(
+  key: string,
+  value: object,
+  path: string,
+  original: UnformattedRDFFile
+) {
   const rtn: { [key: string]: any } = {};
 
-    for (const [skey, val] of Object.entries(value)) {
-      rtn[skey] = formatValue(skey, val, `${path}.${skey}`);
-    }
+  for (const [skey, val] of Object.entries(value)) {
+    rtn[skey] = formatValue(skey, val, `${path}.${skey}`, original);
+  }
 
-    return rtn;
+  return rtn;
 }
 
-function formatValue(key: string, value: any, path: string): any {
+function formatValue(
+  key: string,
+  value: any,
+  path: string,
+  original: UnformattedRDFFile
+): any {
   if (Array.isArray(value)) {
-    return value.map(val => formatValue(key, val, path))
+    return value.map(val => formatValue(key, val, path, original))
   }
 
   const formatter = formatters.get(path);
 
   if (formatter) {
-    return formatter(key, value, path);
+    return formatter(key, value, path, original);
   }
 
   if (typeof value === 'object') {
-    return formatObject(key, value, path);
+    return formatObject(key, value, path, original);
   }
 
   return value;
 }
 
-function postProccessObject(value: any) {
+function postProccessObject(
+  newObject: any,
+  original: UnformattedRDFFile
+) {
   // This fixes the extremely rare case of a book having multiple titles,
   // without those titles using the alternative element like they should.
-  if (Array.isArray(value.rdf.ebook.title) &&
-    Array.isArray(value.rdf.ebook.alternative)) {
-    const moreAlternatives = value.rdf.ebook.title.slice(1);
-    value.rdf.ebook.title = value.rdf.ebook.title[0];
-    value.rdf.ebook.alternative =
-      moreAlternatives.concat(value.rdf.ebook.alternative);
+  if (Array.isArray(newObject.rdf.ebook.title) &&
+    Array.isArray(newObject.rdf.ebook.alternative)) {
+    const moreAlternatives = newObject.rdf.ebook.title.slice(1);
+    newObject.rdf.ebook.title = newObject.rdf.ebook.title[0];
+    newObject.rdf.ebook.alternative =
+      moreAlternatives.concat(newObject.rdf.ebook.alternative);
   }
+
   // `subject` is a common enough field that I'd rather it always be set and
   // empty, than the field itself being conditional.
-  if (!Object.hasOwn(value.rdf.ebook, 'subject')) {
-    value.rdf.ebook.subject = [];
+  if (!Object.hasOwn(newObject.rdf.ebook, 'subject')) {
+    newObject.rdf.ebook.subject = [];
   }
-  return value;
+
+  const relators = shared.get(original);
+
+  if (Array.isArray(relators)) {
+    for (const {code} of relators) {
+      if (code) {
+        delete newObject.rdf.ebook[code];
+      }
+    }
+    newObject.rdf.ebook.relators = relators;
+  }
+
+  return newObject;
 }
 
 export function formatRDFFile(value: UnformattedRDFFile) {
-  const rtn: { [key: string]: any } = {};
+  const newObject: { [key: string]: any } = {};
 
   for (const [key, val] of Object.entries(value)) {
-    rtn[key] = formatValue(key, val, key);
+    newObject[key] = formatValue(key, val, key, value);
   }
 
-  return postProccessObject(rtn) as FormattedRDFFile;
+  return postProccessObject(newObject, value) as FormattedRDFFile;
 }

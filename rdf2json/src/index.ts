@@ -3,8 +3,8 @@ import { XMLParser } from 'fast-xml-parser';
 import { spawn } from 'node:child_process';
 import internal from 'node:stream';
 import { type UnformattedRDFFile } from './types.js';
-import { inspect } from 'node:util';
 import { formatRDFFile } from './formatter.js';
+import { relators } from './input-schemas/relators.js';
 
 async function* processArchive(archiveStream: internal.Readable) {
   let file = '';
@@ -92,65 +92,14 @@ async function* rdfFileStream(stream: internal.Readable) {
     ],
   ]);
 
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:aui'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:aft'
-  );
+  for (const [relator] of relators) {
+    addAgentField(
+      `rdf:RDF.pgterms:ebook.marcrel:${relator}`
+    );
+  }
+
   addAgentField(
     'rdf:RDF.pgterms:ebook.dcterms:creator'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:unk'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:edt',
-    'editor'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:prf',
-    'performer'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:cmp',
-    'composer'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:lbt',
-    'librettist'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:ill',
-    'illustrator'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:ctb',
-    'contributor'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:trl',
-    'translator'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:arr',
-    'arranger'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:com',
-    'compiler'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:oth',
-    'other'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:cnd',
-    'conductor'
-  );
-  addAgentField(
-    'rdf:RDF.pgterms:ebook.marcrel:cmm',
-    'commentator'
   );
 
   function addAgentField(originalPath: string, newName?: string) {
