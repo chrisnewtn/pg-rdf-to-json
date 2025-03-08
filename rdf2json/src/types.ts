@@ -244,6 +244,15 @@ export interface FormattedEbook {
   arranger?: (TaggedAgent | TaggedResource)[],
 
   /**
+   * A performer contributing to a work by providing interpretation, analysis,
+   * or a discussion of the subject matter on a recording, film, or other
+   * audiovisual medium.
+   *
+   * @see {@link https://id.loc.gov/vocabulary/relators/cmm.html}
+   */
+  commentator?: (TaggedAgent | TaggedResource)[],
+
+  /**
    * A person, family, or organization responsible for creating a new work
    * (e.g., a bibliography, a directory) through the act of compilation, e.g.,
    * selecting, arranging, aggregating, and editing data, information, etc.
@@ -374,6 +383,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       }
     },
     aui: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
+    commentator: {
       elements: {
         ref: 'agentOrResource'
       }
