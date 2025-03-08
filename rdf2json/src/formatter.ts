@@ -230,6 +230,10 @@ const formatters: Map<string,  Formatter> = new Map([
     formatNumber
   ],
   [
+    'rdf.ebook.marc250',
+    formatStandaloneText
+  ],
+  [
     'rdf.ebook.marc260',
     formatStandaloneText
   ],
