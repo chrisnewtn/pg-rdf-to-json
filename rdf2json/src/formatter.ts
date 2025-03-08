@@ -289,6 +289,11 @@ function postProccessObject(value: any) {
     value.rdf.ebook.alternative =
       moreAlternatives.concat(value.rdf.ebook.alternative);
   }
+  // `subject` is a common enough field that I'd rather it always be set and
+  // empty, than the field itself being conditional.
+  if (!Object.hasOwn(value.rdf.ebook, 'subject')) {
+    value.rdf.ebook.subject = [];
+  }
   return value;
 }
 
