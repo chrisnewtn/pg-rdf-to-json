@@ -150,6 +150,16 @@ export interface FormattedEbook {
   type: string;
 
   /**
+   * Author of afterword, colophon, etc.
+   *
+   * A person or organization responsible for an afterword, postface, colophon,
+   * etc. but who is not the chief author of a work.
+   *
+   * https://id.loc.gov/vocabulary/relators/aui.html
+   */
+  aft?: (TaggedAgent | TaggedResource)[],
+
+  /**
    * Author of introduction, etc.
    *
    * A person or organization responsible for an introduction, preface,
@@ -330,6 +340,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
       elements: { type: 'string' }
     },
     arranger: {
+      elements: {
+        ref: 'agentOrResource'
+      }
+    },
+    aft: {
       elements: {
         ref: 'agentOrResource'
       }
