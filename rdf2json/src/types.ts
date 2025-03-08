@@ -123,7 +123,16 @@ export interface FormattedEbook {
    */
   marc440?: string;
 
-  marc508?: string;
+  /**
+   * 508 - Creation/Production Credits Note (R)
+   *
+   * Credits for persons or organizations, other than members of the cast, who
+   * have participated in the creation and/or production of the work. The
+   * introductory term Credits: is usually generated as a display constant.
+   *
+   * Field 508 is repeatable to record complex or multiple credit notes.
+   */
+  marc508?: string[];
 
   /**
    * Unformatted information that describes the scope and general contents of
@@ -421,7 +430,9 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     marc260: { type: 'string' },
     marc300: { type: 'string' },
     marc440: { type: 'string' },
-    marc508: { type: 'string' },
+    marc508: {
+      elements: { type: 'string' },
+    },
     marc520: { type: 'string' },
     marc901: {
       elements: { type: 'string' },
