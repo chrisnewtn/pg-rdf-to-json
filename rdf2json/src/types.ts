@@ -78,6 +78,7 @@ export interface TaggedAgent {
   about: string;
   kind: 'agent';
   name: string;
+  code?: string;
   birthdate?: number;
   deathdate?: number;
   alias?: string[];
@@ -173,116 +174,15 @@ export interface FormattedEbook {
   bookshelf: string[];
   type: string;
 
-  /**
-   * Author of afterword, colophon, etc.
-   *
-   * A person or organization responsible for an afterword, postface, colophon,
-   * etc. but who is not the chief author of a work.
-   *
-   * https://id.loc.gov/vocabulary/relators/aui.html
-   */
-  aft?: (TaggedAgent | TaggedResource)[],
-
-  /**
-   * Author of introduction, etc.
-   *
-   * A person or organization responsible for an introduction, preface,
-   * foreword, or other critical introductory matter, but who is not the chief
-   * author.
-   *
-   * https://id.loc.gov/vocabulary/relators/aui.html
-   */
-  aui?: (TaggedAgent | TaggedResource)[],
-
-  /** https://id.loc.gov/vocabulary/relators/ctb.html */
-  contributor?: (TaggedAgent | TaggedResource)[],
-
   creator?: (TaggedAgent | TaggedResource)[],
-  editor?: (TaggedAgent | TaggedResource)[],
-
-  /** https://id.loc.gov/vocabulary/relators/ill.html */
-  illustrator?: (TaggedAgent | TaggedResource)[],
 
   /**
-   * A person contributing to a resource by performing music, acting, dancing,
-   * speaking, etc., often in a musical or dramatic presentation, etc.
+   * Relator terms and their associated codes designate the relationship
+   * between an agent and a bibliographic resource.
    *
-   * If specific codes are used, [prf] is used for a person whose principal
-   * skill is not known or specified.
-   *
-   * @see {@link https://id.loc.gov/vocabulary/relators/prf.html}
+   * https://id.loc.gov/vocabulary/relators.html
    */
-  performer?: (TaggedAgent | TaggedResource)[],
-
-  /**
-   * A person, family, or organization responsible for creating or contributing
-   * to a musical resource by adding music to a work that originally lacked it
-   * or supplements it.
-   *
-   * @see {@link https://id.loc.gov/vocabulary/relators/cmp.html}
-   */
-  composer?: (TaggedAgent | TaggedResource)[],
-
-  /**
-   * An author of a libretto of an opera or other stage work, or an oratorio.
-   *
-   * @see {@link https://id.loc.gov/vocabulary/relators/lbt.html}
-   */
-  librettist?: (TaggedAgent | TaggedResource)[],
-
-  /**
-   * A person, family, or organization contributing to a musical work by
-   * rewriting the composition for a medium of performance different from that
-   * for which the work was originally intended, or modifying the work for the
-   * same medium of performance, etc., such that the musical substance of the
-   * original composition remains essentially unchanged. For extensive
-   * modification that effectively results in the creation of a new musical
-   * work, see composer.
-   *
-   * @see {@link https://id.loc.gov/vocabulary/relators/arr.html}
-   */
-  arranger?: (TaggedAgent | TaggedResource)[],
-
-  /**
-   * A performer contributing to a work by providing interpretation, analysis,
-   * or a discussion of the subject matter on a recording, film, or other
-   * audiovisual medium.
-   *
-   * @see {@link https://id.loc.gov/vocabulary/relators/cmm.html}
-   */
-  commentator?: (TaggedAgent | TaggedResource)[],
-
-  /**
-   * A person, family, or organization responsible for creating a new work
-   * (e.g., a bibliography, a directory) through the act of compilation, e.g.,
-   * selecting, arranging, aggregating, and editing data, information, etc.
-   *
-   * @see {@link https://id.loc.gov/vocabulary/relators/com.html}
-   */
-  compiler?: (TaggedAgent | TaggedResource)[],
-
-  /**
-   * A performer contributing to a musical resource by leading a performing
-   * group (orchestra, chorus, opera, etc.) in a musical or dramatic
-   * presentation.
-   *
-   * @see {@link https://id.loc.gov/vocabulary/relators/cnd.html}
-   */
-  conductor?: (TaggedAgent | TaggedResource)[],
-
-  /**
-   * A role that has no equivalent in the MARC list.
-   *
-   * @see {@link https://id.loc.gov/vocabulary/relators/oth.html}
-   */
-  other?: (TaggedAgent | TaggedResource)[],
-
-  translator?: (TaggedAgent | TaggedResource)[],
-
-  /**
-   * This appears to be short for "Unknown".
-   */
-  unk?: (TaggedAgent | TaggedResource)[],
+  relators?: (TaggedAgent | TaggedResource)[],
 
   files: File[]
 }
@@ -330,6 +230,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
               elements: { type: 'string' }
             },
             birthdate: { type: 'float64' },
+            code: { type: 'string' },
             deathdate: { type: 'float64' },
             webpage: {
               elements: { type: 'string' }
@@ -372,46 +273,6 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     alternative: {
       elements: { type: 'string' }
     },
-    arranger: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    aft: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    aui: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    commentator: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    compiler: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    composer: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    conductor: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    contributor: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
     creator: {
       elements: {
         ref: 'agentOrResource'
@@ -420,37 +281,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     description: {
       elements: { type: 'string' }
     },
-    editor: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    illustrator: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    librettist: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    other: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    performer: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    translator: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
-    unk: {
+    relators: {
       elements: {
         ref: 'agentOrResource'
       }

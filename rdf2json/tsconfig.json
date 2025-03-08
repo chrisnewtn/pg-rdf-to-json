@@ -6,6 +6,7 @@
     "declaration": true,
     "declarationMap": true,
     "inlineSourceMap": true,
+    "resolveJsonModule": true,
     "outDir": "dist",
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
