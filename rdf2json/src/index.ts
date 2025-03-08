@@ -65,6 +65,7 @@ async function* rdfFileStream(stream: internal.Readable) {
 
   const arrays = new Set([
     'rdf.ebook.subject',
+    'rdf.ebook.files',
     'rdf.ebook.files.file.format',
     'rdf.ebook.files.file.extent',
     'rdf.ebook.files.file.modified',
