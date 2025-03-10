@@ -112,64 +112,8 @@ export interface FormattedEbook {
   rights: string;
   downloads: number;
 
-  /** https://www.loc.gov/marc/authority/ad010.html */
-  marc010?: number;
-
-  /** @see {@link https://www.loc.gov/marc/bibliographic/bd250.html} */
-  marc250?: string;
-
-  marc260?: string;
-  marc300?: string;
-
-  /**
-   * Series Statement/Added Entry-Title [OBSOLETE, 2008]
-   * @see {@link https://www.loc.gov/marc/bibliographic/bd4xx.html}
-   */
-  marc440?: string;
-
-  /**
-   * 508 - Creation/Production Credits Note (R)
-   *
-   * Credits for persons or organizations, other than members of the cast, who
-   * have participated in the creation and/or production of the work. The
-   * introductory term Credits: is usually generated as a display constant.
-   *
-   * Field 508 is repeatable to record complex or multiple credit notes.
-   */
-  marc508?: string[];
-
-  /**
-   * Unformatted information that describes the scope and general contents of
-   * the materials.
-   *
-   * This could be a summary, abstract, annotation, review, or only a phrase
-   * describing the material.
-   *
-   * @see {@link https://www.loc.gov/marc/bibliographic/bd520.html}
-   */
-  marc520?: string;
-
-  /**
-   * 546 - Language Note (R)
-   *
-   * Textual information on the language or notation system used to convey the
-   * content of the described materials. A description of the alphabet, script,
-   * or other symbol system (e.g., arabic alphabet, ASCII, bar code,
-   * logarithmic graphing) may also be included, but for musical notation system
-   * terms, prefer field 348 (Notated Music Characteristics). Coded language
-   * information is contained in fields 008/35-37 (Language) and/or
-   * 041 (Language code).
-   *
-   * @see {@link https://www.loc.gov/marc/bibliographic/bd546.html}
-   */
-  marc546?: string;
-
-  marc901?: string[];
-
-  /**
-   * Appears to be used to store the title.
-   */
-  marc905?: string;
+  /** @see {@link https://www.loc.gov/marc/bibliographic/bdsummary.html} */
+  marc: Record<string, any>;
 
   tableOfContents?: string;
   language: string[];
@@ -198,7 +142,7 @@ export interface FormattedRDFFile {
 
 export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
   file: File,
-  agentOrResource: TaggedAgent | TaggedResource
+  agentOrResource: TaggedAgent | TaggedResource,
 }> = {
   definitions: {
     file: {
@@ -246,7 +190,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
           }
         }
       }
-    }
+    },
   },
   properties: {
     about: { type: 'string' },
@@ -256,6 +200,9 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     issued: { type: 'string' },
     rights: { type: 'string' },
     downloads: { type: 'float64' },
+    marc: {
+      values: {}
+    },
     language: {
       elements: { type: 'string' }
     },
@@ -289,20 +236,6 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
         ref: 'agentOrResource'
       }
     },
-    marc010: { type: 'float64' },
-    marc250: { type: 'string' },
-    marc260: { type: 'string' },
-    marc300: { type: 'string' },
-    marc440: { type: 'string' },
-    marc508: {
-      elements: { type: 'string' },
-    },
-    marc520: { type: 'string' },
-    marc546: { type: 'string' },
-    marc901: {
-      elements: { type: 'string' },
-    },
-    marc905: { type: 'string' },
     tableOfContents: { type: 'string' },
   }
 };

@@ -1,7 +1,8 @@
 import { relators } from './input-schemas/relators.js';
 import { type FormattedRDFFile, type UnformattedRDFFile } from './types.js';
 
-const shared: WeakMap<UnformattedRDFFile, any[]> = new WeakMap();
+const sharedRelators: WeakMap<UnformattedRDFFile, any[]> = new WeakMap();
+const sharedMarc: WeakMap<UnformattedRDFFile, Record<string, any>> = new WeakMap();
 
 type Formatter = (
   key: string,
@@ -13,7 +14,8 @@ type Formatter = (
 function formatNumber(
   key: string,
   val: any,
-  path: string
+  path: string,
+  original: UnformattedRDFFile
 ) {
   const parsed = parseInt(val?.['#text'], 10);
 
@@ -27,12 +29,13 @@ function formatNumber(
 function formatInteger(
   key: string,
   val: any,
-  path: string
+  path: string,
+  original: UnformattedRDFFile
 ) {
   if (val?.datatype !== 'http://www.w3.org/2001/XMLSchema#integer') {
     throw new TypeError(`Expected integer datatype at ${path}.datatype`);
   }
-  return formatNumber(key, val, path);
+  return formatNumber(key, val, path, original);
 }
 
 function formatDatetime(
@@ -149,10 +152,10 @@ function formatAgent(
     formattedAgent.code = key;
   }
 
-  if (shared.has(original)) {
-    shared.get(original)?.push(formattedAgent);
+  if (sharedRelators.has(original)) {
+    sharedRelators.get(original)?.push(formattedAgent);
   } else {
-    shared.set(original, [formattedAgent]);
+    sharedRelators.set(original, [formattedAgent]);
   }
 
   return formattedAgent;
@@ -172,7 +175,32 @@ function formatLanguage(
   return value?.['#text'];
 }
 
-const formatters: Map<string,  Formatter> = new Map([
+const marcMatcher = /^marc(?<id>\d{3})$/;
+
+function mergeMarcField(
+  key: string,
+  value: any,
+  path: string,
+  original: UnformattedRDFFile
+) {
+  const matches = marcMatcher.exec(key);
+
+  if (!matches || !matches.groups) {
+    throw new Error(`Expected field to start with "marc". Got "${key}"`);
+  }
+
+  const marcFields = sharedMarc.get(original);
+
+  if (!marcFields) {
+    sharedMarc.set(original, { [matches.groups.id]: value });
+  } else {
+    marcFields[matches.groups.id] = value;
+  }
+
+  return value;
+}
+
+const formatters: Map<string,  Formatter | Formatter[]> = new Map([
   [
     'rdf.ebook.files',
     hoistStandaloneObjectValue
@@ -223,46 +251,6 @@ const formatters: Map<string,  Formatter> = new Map([
   ],
   [
     'rdf.ebook.title',
-    formatStandaloneText
-  ],
-  [
-    'rdf.ebook.marc010',
-    formatNumber
-  ],
-  [
-    'rdf.ebook.marc250',
-    formatStandaloneText
-  ],
-  [
-    'rdf.ebook.marc260',
-    formatStandaloneText
-  ],
-  [
-    'rdf.ebook.marc300',
-    formatStandaloneText
-  ],
-  [
-    'rdf.ebook.marc440',
-    formatStandaloneText
-  ],
-  [
-    'rdf.ebook.marc508',
-    formatStandaloneText
-  ],
-  [
-    'rdf.ebook.marc520',
-    formatStandaloneText
-  ],
-  [
-    'rdf.ebook.marc546',
-    formatStandaloneText
-  ],
-  [
-    'rdf.ebook.marc901',
-    formatStandaloneText
-  ],
-  [
-    'rdf.ebook.marc905',
     formatStandaloneText
   ],
   [
@@ -319,6 +307,37 @@ function agentRules(path: string): [string, Formatter][] {
   ];
 }
 
+const marcRanges = [
+              // 00X: Control Fields
+              // 01X-09X: Numbers and Code Fields
+  [100, 199], // 1XX: Main Entry Fields
+  [200, 249], // 20X-24X: Title and Title-Related Fields
+  [250, 289], // 25X-28X: Edition, Imprint, Etc. Fields
+  [300, 399], // 3XX: Physical Description, Etc. Fields
+  [400, 499], // 4XX: Series Statement Fields
+  [500, 599], // 5XX: Note Fields
+  [600, 699], // 6XX: Subject Access Fields
+  [700, 759], // 70X-75X: Added Entry Fields
+  [760, 789], // 76X-78X: Linking Entry and Description Fields
+  [800, 839], // 80X-83X: Series Added Entry Fields
+  [841, 889], // 841-88X: Holdings, Location, Alternate Graphics, Etc. Fields
+  [900, 909], // Vendor specific fields.
+];
+
+for (const [start, end] of marcRanges) {
+  for (let i = start; i <= end; i++) {
+    formatters.set(
+      `rdf.ebook.marc${i}`,
+      [formatStandaloneText, mergeMarcField]
+    );
+  }
+}
+
+formatters.set(
+  'rdf.ebook.marc010',
+  [formatNumber, mergeMarcField]
+);
+
 function formatObject(
   key: string,
   value: object,
@@ -347,7 +366,10 @@ function formatValue(
   const formatter = formatters.get(path);
 
   if (formatter) {
-    return formatter(key, value, path, original);
+    if (!Array.isArray(formatter)) {
+      return formatter(key, value, path, original);
+    }
+    return formatter.reduce((memo, f) => f(key, memo, path, original), value);
   }
 
   if (typeof value === 'object') {
@@ -377,7 +399,7 @@ function postProccessObject(
     newObject.rdf.ebook.subject = [];
   }
 
-  const relators = shared.get(original);
+  const relators = sharedRelators.get(original);
 
   if (Array.isArray(relators)) {
     for (const {code} of relators) {
@@ -386,6 +408,18 @@ function postProccessObject(
       }
     }
     newObject.rdf.ebook.relators = relators;
+  }
+
+  const marcFields = sharedMarc.get(original);
+
+  if (marcFields) {
+    newObject.rdf.ebook.marc = marcFields;
+
+    for (const key of Object.keys(marcFields)) {
+      delete newObject.rdf.ebook[`marc${key}`];
+    }
+  } else {
+    newObject.rdf.ebook.marc = {};
   }
 
   return newObject;
