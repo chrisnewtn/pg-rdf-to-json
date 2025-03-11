@@ -1,9 +1,9 @@
 {
   "name": "rdf2json",
   "version": "0.0.0",
-  "description": "Transforms RDF files from rdf-files.tar.bz2 into JS objects",
-  "license": "ISC",
-  "author": "Chris Newton",
+  "description": "Transforms RDF files from rdf-files.tar.bz2 provided by Project Gutenberg into JS/JSON objects.",
+  "license": "MIT",
+  "author": "Chris Newton <me@chrisnewtn.com> (https://chrisnewtn.com)",
   "type": "module",
   "bin": "dist/cli.js",
   "main": "dist/index.js",
@@ -16,6 +16,14 @@
     "predry-run": "npm run build",
     "dry-run": "tar -lxOf input-files/rdf-files.tar.bz2 | node --enable-source-maps dist/cli.js --validate - output-data"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/chrisnewtn/rdf2json.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chrisnewtn/rdf2json/issues"
+  },
+  "homepage": "https://github.com/chrisnewtn/rdf2json#readme",
   "dependencies": {
     "ajv": "^8.17.1",
     "fast-xml-parser": "^5.0.7",
