@@ -1,2 +1,5 @@
 node_modules
 rdf-files.tar.bz2
+input-files
+output-data
+dist
