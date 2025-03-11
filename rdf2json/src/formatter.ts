@@ -307,8 +307,8 @@ function agentRules(path: string): [string, Formatter][] {
 }
 
 const marcRanges = [
-              // 00X: Control Fields
-              // 01X-09X: Numbers and Code Fields
+  [  1,   8], // 00X: Control Fields
+  [ 10,  99], // 01X-09X: Numbers and Code Fields
   [100, 199], // 1XX: Main Entry Fields
   [200, 249], // 20X-24X: Title and Title-Related Fields
   [250, 289], // 25X-28X: Edition, Imprint, Etc. Fields
@@ -326,16 +326,11 @@ const marcRanges = [
 for (const [start, end] of marcRanges) {
   for (let i = start; i <= end; i++) {
     formatters.set(
-      `rdf.ebook.marc${i}`,
+      `rdf.ebook.marc${i.toString().padStart(3, '0')}`,
       [formatStandaloneText, mergeMarcField]
     );
   }
 }
-
-formatters.set(
-  'rdf.ebook.marc010',
-  [formatNumber, mergeMarcField]
-);
 
 function formatObject(
   key: string,
