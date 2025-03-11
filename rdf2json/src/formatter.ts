@@ -403,6 +403,11 @@ function postProccessObject(
     newObject.rdf.ebook.bookshelf = [];
   }
 
+  // `files` is extremely commonly set, so just guarantee it.
+  if (!Object.hasOwn(newObject.rdf.ebook, 'files')) {
+    newObject.rdf.ebook.files = [];
+  }
+
   // Store all found relators on against a single array.
   const relators = sharedRelators.get(original);
 
