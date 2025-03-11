@@ -131,34 +131,33 @@ function formatAgent(
     throw new TypeError(`Expected object at ${path}`);
   }
 
-  if (Object.keys(value).length !== 1) {
+  const keys = Object.keys(value);
+  let formattedRelator;
+
+  if (keys[0] === 'agent') {
+    formattedRelator = formatValue(
+      keys[0],
+      value[keys[0]],
+      `${path}.${keys[0]}`,
+      original
+    );
+  } else if (keys.includes('resource')) {
+    formattedRelator = formatObject(key, value, path, original);
+  } else {
     return formatObject(key, value, path, original);
   }
 
-  const [onlyKey] = Object.keys(value);
-
-  if (onlyKey !== 'agent') {
-    return value;
-  }
-
-  const formattedAgent = formatValue(
-    onlyKey,
-    value[onlyKey],
-    `${path}.${onlyKey}`,
-    original
-  );
-
   if (relators.has(key)) {
-    formattedAgent.code = key;
+    formattedRelator.code = key;
   }
 
   if (sharedRelators.has(original)) {
-    sharedRelators.get(original)?.push(formattedAgent);
+    sharedRelators.get(original)?.push(formattedRelator);
   } else {
-    sharedRelators.set(original, [formattedAgent]);
+    sharedRelators.set(original, [formattedRelator]);
   }
 
-  return formattedAgent;
+  return formattedRelator;
 }
 
 function formatLanguage(
@@ -399,15 +398,23 @@ function postProccessObject(
     newObject.rdf.ebook.subject = [];
   }
 
+  // `bookshelf` is a common enough field that I'd rather it always be set and
+  // empty, than the field itself being conditional.
+  if (!Object.hasOwn(newObject.rdf.ebook, 'bookshelf')) {
+    newObject.rdf.ebook.bookshelf = [];
+  }
+
   const relators = sharedRelators.get(original);
 
   if (Array.isArray(relators)) {
-    for (const {code} of relators) {
-      if (code) {
-        delete newObject.rdf.ebook[code];
+    newObject.rdf.ebook.relators = [];
+
+    for (const relator of relators) {
+      if (relator.code) {
+        newObject.rdf.ebook.relators.push(relator);
+        delete newObject.rdf.ebook[relator.code];
       }
     }
-    newObject.rdf.ebook.relators = relators;
   }
 
   const marcFields = sharedMarc.get(original);
