@@ -420,6 +420,8 @@ function postProccessObject(
         delete newObject.rdf.ebook[relator.code];
       }
     }
+
+    sharedRelators.delete(original);
   }
 
   // Store all found marc fields against a single object.
@@ -431,6 +433,8 @@ function postProccessObject(
     for (const key of Object.keys(marcFields)) {
       delete newObject.rdf.ebook[`marc${key}`];
     }
+
+    sharedMarc.delete(original);
   } else {
     newObject.rdf.ebook.marc = {};
   }
