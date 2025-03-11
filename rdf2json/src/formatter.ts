@@ -379,12 +379,16 @@ function postProccessObject(
 ) {
   // This fixes the extremely rare case of a book having multiple titles,
   // without those titles using the alternative element like they should.
-  if (Array.isArray(newObject.rdf.ebook.title) &&
-    Array.isArray(newObject.rdf.ebook.alternative)) {
+  if (Array.isArray(newObject.rdf.ebook.title)) {
     const moreAlternatives = newObject.rdf.ebook.title.slice(1);
     newObject.rdf.ebook.title = newObject.rdf.ebook.title[0];
-    newObject.rdf.ebook.alternative =
-      moreAlternatives.concat(newObject.rdf.ebook.alternative);
+
+    if (Array.isArray(newObject.rdf.ebook.alternative)) {
+      newObject.rdf.ebook.alternative =
+        moreAlternatives.concat(newObject.rdf.ebook.alternative);
+    } else {
+      newObject.rdf.ebook.alternative = moreAlternatives;
+    }
   }
 
   // `subject` is a common enough field that I'd rather it always be set and
@@ -399,6 +403,7 @@ function postProccessObject(
     newObject.rdf.ebook.bookshelf = [];
   }
 
+  // Store all found relators on against a single array.
   const relators = sharedRelators.get(original);
 
   if (Array.isArray(relators)) {
@@ -412,6 +417,7 @@ function postProccessObject(
     }
   }
 
+  // Store all found marc fields against a single object.
   const marcFields = sharedMarc.get(original);
 
   if (marcFields) {
