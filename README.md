@@ -6,5 +6,5 @@ Transforms RDF files from [rdf-files.tar.bz2][rdf-files.tar.bz2] provided by [Pr
 
 [rdf-files.tar.bz2]: https://www.gutenberg.org/cache/epub/feeds/
 [project-gutenberg]: https://www.gutenberg.org/
-[tests]: https://github.com/chrisnewtn/hast-util-find-parent/actions/workflows/tests.yml
-[tests-badge]: https://github.com/chrisnewtn/hast-util-find-parent/actions/workflows/tests.yml/badge.svg
+[tests]: https://github.com/chrisnewtn/rdf2json/actions/workflows/tests.yml
+[tests-badge]: https://github.com/chrisnewtn/rdf2json/actions/workflows/tests.yml/badge.svg
