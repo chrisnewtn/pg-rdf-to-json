@@ -48,9 +48,6 @@ async function* rdfFileStream(stream: internal.Readable) {
     return str.charAt(0).toLowerCase() + str.substring(1);
   }
 
-  const manualAttrNameMap = new Map([
-  ]);
-
   const tagNameMap: Map<string, string> = new Map();
   const attrNameMap: Map<string, string> = new Map();
 
@@ -136,9 +133,6 @@ async function* rdfFileStream(stream: internal.Readable) {
       return attrName.startsWith('xmlns:');
     },
     transformAttributeName(attrName: string) {
-      if (manualAttrNameMap.has(attrName)) {
-        return manualAttrNameMap.get(attrName) as string;
-      }
       const matches = attrNameMatcher.exec(attrName);
 
       if (matches === null || !matches.groups) {
