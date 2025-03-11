@@ -89,6 +89,8 @@ async function booksToFiles(
 
     log(`processed ${count}: ${bookId}`);
   }
+
+  console.log('done');
 }
 
 async function booksToStdout(books: AsyncGenerator<FormattedEbook>) {
