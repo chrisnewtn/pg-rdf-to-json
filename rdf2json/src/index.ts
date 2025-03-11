@@ -2,9 +2,12 @@ import readline from 'node:readline/promises';
 import { XMLParser } from 'fast-xml-parser';
 import { spawn } from 'node:child_process';
 import internal from 'node:stream';
-import { type UnformattedRDFFile } from './types.js';
+import { type UnformattedRDFFile, type FormattedEbook } from './types.js';
 import { formatRDFFile } from './formatters/formatters.js';
 import { relators } from './input-schemas/relators.js';
+
+/** Re-export FormattedEbook for use downstream. */
+export {FormattedEbook};
 
 async function* processArchive(archiveStream: internal.Readable) {
   let file = '';
