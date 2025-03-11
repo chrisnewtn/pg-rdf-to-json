@@ -3,7 +3,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { spawn } from 'node:child_process';
 import internal from 'node:stream';
 import { type UnformattedRDFFile } from './types.js';
-import { formatRDFFile } from './formatter.js';
+import { formatRDFFile } from './formatters/formatters.js';
 import { relators } from './input-schemas/relators.js';
 
 async function* processArchive(archiveStream: internal.Readable) {

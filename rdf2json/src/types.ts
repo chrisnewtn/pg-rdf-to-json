@@ -1,5 +1,12 @@
 import { type JTDSchemaType } from 'ajv/dist/jtd.js';
 
+export type Formatter = (
+  key: string,
+  val: any,
+  path: string,
+  original: UnformattedRDFFile
+) => any;
+
 export type BookType =
   'Collection' |
   'Dataset' |
