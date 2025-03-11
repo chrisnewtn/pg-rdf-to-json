@@ -48,10 +48,6 @@ async function* rdfFileStream(stream: internal.Readable) {
     return str.charAt(0).toLowerCase() + str.substring(1);
   }
 
-  const manualTagNameMap = new Map([
-    ['rdf:RDF', 'rdf'],
-  ]);
-
   const manualAttrNameMap = new Map([
   ]);
 
