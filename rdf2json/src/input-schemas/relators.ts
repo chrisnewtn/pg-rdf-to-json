@@ -37,3 +37,7 @@ relators.set(
   'unk',
   'unknown'
 );
+relators.set(
+  'clb',
+  'collaborator'
+);
