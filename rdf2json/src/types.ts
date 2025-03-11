@@ -90,7 +90,8 @@ export interface FormattedResource {
 }
 
 export interface TaggedResource extends FormattedResource {
-  kind: 'resource'
+  kind: 'resource';
+  code?: string;
 }
 
 export interface File {
@@ -187,7 +188,10 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
         resource: {
           properties: {
             resource: { type: 'string' }
-          }
+          },
+          optionalProperties: {
+            code: { type: 'string' }
+          },
         }
       }
     },
