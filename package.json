@@ -20,6 +20,15 @@
     "type": "git",
     "url": "git+ssh://git@github.com/chrisnewtn/rdf2json.git"
   },
+  "keywords": [
+    "metadata",
+    "json",
+    "rdf",
+    "xml",
+    "marc21",
+    "mads",
+    "project-gutenberg"
+  ],
   "bugs": {
     "url": "https://github.com/chrisnewtn/rdf2json/issues"
   },
