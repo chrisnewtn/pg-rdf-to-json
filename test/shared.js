@@ -1,6 +1,6 @@
 import { booksFromStream } from '../dist/index.js';
 import { before, describe, it } from 'node:test';
-import { equal, deepEqual } from 'node:assert/strict';
+import { deepEqual } from 'node:assert/strict';
 import { createReadStream } from 'node:fs';
 import path from 'node:path';
 import { Ajv } from 'ajv/dist/jtd.js';
