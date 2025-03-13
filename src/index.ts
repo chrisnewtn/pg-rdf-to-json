@@ -21,6 +21,13 @@ export {
   TaggedResource,
 };
 
+/**
+ * Accepts a {@link internal.Readable} stream of XML text. This generator will
+ * yield the complete text of each XML document it encounters in the passed
+ * stream.
+ *
+ * @param archiveStream A Readable stream of text.
+ */
 async function* processArchive(archiveStream: internal.Readable) {
   let file = '';
 
@@ -42,6 +49,13 @@ async function* processArchive(archiveStream: internal.Readable) {
   }
 }
 
+/**
+ * Accepts a {@link internal.Readable} stream of XML text. It will parse each
+ * XML document yielded by {@link processArchive} using the parser produced by
+ * {@link getParser}, yielding the resulting object.
+ *
+ * @param stream A Readable stream of XML text.
+ */
 async function* rdfFileStream(stream: internal.Readable) {
   const parser = getParser();
 
