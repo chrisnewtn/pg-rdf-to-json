@@ -1,12 +1,25 @@
 import readline from 'node:readline/promises';
 import { spawn } from 'node:child_process';
 import internal from 'node:stream';
-import { type UnformattedRDFFile, type FormattedEbook } from './types.js';
 import { formatRDFFile } from './formatters/formatters.js';
 import { getParser } from './parser.js';
+import {
+  formattedEbookSchema,
+  type UnformattedRDFFile,
+  type FormattedEbook,
+  type File,
+  type TaggedAgent,
+  type TaggedResource,
+} from './types.js';
 
-/** Re-export FormattedEbook for use downstream. */
-export {FormattedEbook};
+/** Re-export types for use downstream. */
+export {
+  formattedEbookSchema as ebookSchema,
+  FormattedEbook,
+  File,
+  TaggedAgent,
+  TaggedResource,
+};
 
 async function* processArchive(archiveStream: internal.Readable) {
   let file = '';
