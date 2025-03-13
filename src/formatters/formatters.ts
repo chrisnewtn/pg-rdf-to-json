@@ -16,6 +16,7 @@ import hoistStandaloneObjectValue from './hoistStandaloneObjectValue.js';
 import formatAgent, { postProcessRelators } from './formatAgent.js';
 import mergeMarcField, { postProcessMarcFields } from './mergeMarcField.js';
 import { marcRanges } from '../input-schemas/marc.js';
+import decodeStandaloneText from './decodeStandaloneText.js';
 
 type Rule = [string, Formatter | Formatter[]];
 
@@ -70,7 +71,7 @@ export const formatters: Map<Rule[0], Rule[1]> = new Map([
   ],
   [
     'rdf.ebook.title',
-    formatStandaloneText
+    decodeStandaloneText
   ],
   [
     'rdf.ebook.description',
