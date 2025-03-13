@@ -1,6 +1,10 @@
-node_modules
+test
+src
 rdf-files.tar.bz2
 input-files
 output-data
 dist
 rdf2json-*.tgz
+tsconfig.json
+.editorconfig
+.github
