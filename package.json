@@ -8,6 +8,7 @@
   "bin": "dist/cli.js",
   "main": "dist/index.js",
   "scripts": {
+    "prepack": "npm run build",
     "prebuild": "rm -rf dist",
     "build": "tsc -p tsconfig.json",
     "postbuild": "chmod +x dist/cli.js",
