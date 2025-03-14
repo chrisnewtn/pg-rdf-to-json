@@ -10,7 +10,7 @@ import { extractProp } from '../dist/util.js';
 const ajv = new Ajv();
 export const validate = ajv.compile(formattedEbookSchema);
 
-export function getValidationErrors(validateFunction) {
+export function getValidationErrors(validateFunction, book) {
   return (validateFunction.errors || []).map(error => ({
     ...error,
     value: extractProp(book, error.instancePath)
@@ -45,7 +45,7 @@ export function generateSchemaValidationSuite(id) {
 
     it('is a valid ebook', () => {
       validate(book);
-      deepEqual(getValidationErrors(validate), []);
+      deepEqual(getValidationErrors(validate, book), []);
     });
   });
 }
