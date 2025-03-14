@@ -69,22 +69,16 @@ export function getParser() {
     'rdf:RDF.pgterms:ebook.dcterms:creator'
   );
 
-  function addAgentField(originalPath: string, newName?: string) {
-    if (!newName) {
-      const matches = originalPath.match(/:(?<name>\w+)$/);
+  function addAgentField(originalPath: string) {
+    const matches = originalPath.match(/:(?<name>\w+)$/);
 
-      if (!matches || !matches.groups) {
-        throw new Error('no matches');
-      }
-
-      newName = matches.groups.name;
-    } else {
-      tagNameTransforms.set(originalPath, newName);
+    if (!matches || !matches.groups) {
+      throw new Error('no matches');
     }
 
-    arrays.add(`rdf.ebook.${newName}`);
-    arrays.add(`rdf.ebook.${newName}.agent.alias`);
-    arrays.add(`rdf.ebook.${newName}.agent.webpage`);
+    arrays.add(`rdf.ebook.${matches.groups.name}`);
+    arrays.add(`rdf.ebook.${matches.groups.name}.agent.alias`);
+    arrays.add(`rdf.ebook.${matches.groups.name}.agent.webpage`);
   }
 
   return new XMLParser({
