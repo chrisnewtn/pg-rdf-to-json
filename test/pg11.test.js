@@ -2,7 +2,7 @@ import { before, describe, it } from 'node:test';
 import { equal, deepEqual } from 'node:assert/strict';
 import { getSingleBook, getValidationErrors, validate } from './shared.js';
 
-const id = '11';
+const id = 11;
 const file = `pg${id}.rdf`;
 
 describe(file, () => {
@@ -16,8 +16,8 @@ describe(file, () => {
     deepEqual(getValidationErrors(validate), []);
   });
 
-  it(`has an "about" of "ebooks/${id}"`, () => {
-    equal(book.about, `ebooks/${id}`);
+  it(`has an "about" of ${id}`, () => {
+    equal(book.about, id);
   });
 
   it('has a title of "Alice\'s Adventures in Wonderland"', () => {

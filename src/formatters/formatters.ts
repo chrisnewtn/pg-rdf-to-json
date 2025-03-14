@@ -5,6 +5,7 @@ import {
   type UnformattedRDFFile,
 } from '../types.js';
 import formatAgentId from './formatAgentId.js';
+import formatEbookId from './formatEbookId.js';
 import formatDatetime from './formatDatetime.js';
 import formatDate from './formatDate.js';
 import formatDescription from './formatDescription.js';
@@ -23,8 +24,16 @@ type Rule = [string, Formatter | Formatter[]];
 
 export const formatters: Map<Rule[0], Rule[1]> = new Map([
   [
+    'rdf.ebook.about',
+    formatEbookId
+  ],
+  [
     'rdf.ebook.files',
     hoistStandaloneObjectValue
+  ],
+  [
+    'rdf.ebook.files.file.isFormatOf.resource',
+    formatEbookId
   ],
   [
     'rdf.ebook.files.file.format',

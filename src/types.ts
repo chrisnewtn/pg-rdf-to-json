@@ -91,8 +91,8 @@ export interface Agent {
   webpage?: string[];
 }
 
-export interface FormattedResource {
-  resource: string;
+export interface FormattedResource<T = string> {
+  resource: T;
 }
 
 export interface TaggedResource extends FormattedResource {
@@ -102,14 +102,14 @@ export interface TaggedResource extends FormattedResource {
 
 export interface File {
   about: string;
-  isFormatOf: FormattedResource,
+  isFormatOf: FormattedResource<number>,
   extent: number[];
   format: string[];
   modified: Date[];
 }
 
 export interface FormattedEbook {
-  about: string;
+  about: number;
   title: string;
   alternative?: string[];
   description?: string[];
@@ -155,7 +155,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
         about: { type: 'string' },
         isFormatOf: {
           properties: {
-            resource: { type: 'string' }
+            resource: { type: 'uint32' }
           }
         },
         extent: {
@@ -192,7 +192,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     },
   },
   properties: {
-    about: { type: 'string' },
+    about: { type: 'uint32' },
     title: { type: 'string' },
     publisher: { type: 'string' },
     license: { type: 'string' },
