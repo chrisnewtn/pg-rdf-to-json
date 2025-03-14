@@ -13,8 +13,8 @@ describe('pg36.rdf', () => {
     deepEqual(getValidationErrors(validate), []);
   });
 
-  it('has an "about" of "ebooks/36"', () => {
-    equal(book.about, 'ebooks/36');
+  it('has an "about" of 36', () => {
+    equal(book.about, 36);
   });
 
   it('has a title of "The War of the Worlds"', () => {
