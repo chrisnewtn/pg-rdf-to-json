@@ -32,7 +32,9 @@ export default function formatAgent(
   }
 
   if (relators.has(key)) {
-    formattedRelator.code = key;
+    formattedRelator.codes = [key];
+  } else if (key.endsWith('creator')) {
+    formattedRelator.codes = ['cre'];
   }
 
   if (sharedRelators.has(original)) {
@@ -50,16 +52,30 @@ export function postProcessRelators(
 ) {
   const relators = sharedRelators.get(original);
 
-  if (Array.isArray(relators)) {
-    newObject.rdf.ebook.relators = [];
+  newObject.rdf.ebook.relators = [];
 
+  if (Array.isArray(relators)) {
     for (const relator of relators) {
-      if (relator.code) {
-        newObject.rdf.ebook.relators.push(relator);
-        delete newObject.rdf.ebook[relator.code];
+      if (Array.isArray(relator.codes)) {
+        const toDelete = relator.codes
+          .map((c: string) => c === 'cre' ? 'creator' : c);
+
+        if (Object.hasOwn(relator, 'resource')) {
+          const original: any = relators.find((r: any) => {
+            return r.about === relator.resource;
+          });
+          if (original) {
+            original.codes.push(...relator.codes);
+          }
+        } else {
+          newObject.rdf.ebook.relators.push(relator);
+        }
+
+        for (const code of toDelete) {
+          delete newObject.rdf.ebook[code];
+        }
       }
     }
-
     sharedRelators.delete(original);
   }
 }

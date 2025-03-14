@@ -2,23 +2,6 @@ import { XMLParser } from "fast-xml-parser";
 import { relators } from './input-schemas/relators.js';
 
 /**
- * Adds a property named "kind" with a value of "agent" to the passed object.
- */
-function labelAgent(attrs: {[ k: string]: string }) {
-  attrs.kind = 'agent';
-}
-
-/**
- * Conditionally adds a property named "kind" with a value of "resource" to the
- * passed object if it already has a property named "resource".
- */
-function labelResource(attrs: {[ k: string]: string }) {
-  if (Object.hasOwn(attrs, 'resource')) {
-    attrs.kind = 'resource';
-  }
-}
-
-/**
  * Sends the first character of the passed string to upper case.
  */
 function capitalize(str: string) {
@@ -46,11 +29,6 @@ const attrNameMatcher = /^@_(?<ns>\w+):(?<name>\w+)$/;
 export function getParser() {
   const tagNameMap: Map<string, string> = new Map();
   const attrNameMap: Map<string, string> = new Map();
-
-  const attrUnionDiscriminators: Map<
-    string,
-    (attrs: {[ k: string]: string }) => void
-  > = new Map();
 
   const arrays = new Set([
     'rdf.ebook.subject',
@@ -107,15 +85,6 @@ export function getParser() {
     arrays.add(`rdf.ebook.${newName}`);
     arrays.add(`rdf.ebook.${newName}.agent.alias`);
     arrays.add(`rdf.ebook.${newName}.agent.webpage`);
-
-    attrUnionDiscriminators.set(
-      originalPath,
-      labelResource
-    );
-    attrUnionDiscriminators.set(
-      `${originalPath}.pgterms:agent`,
-      labelAgent
-    );
   }
 
   return new XMLParser({
@@ -152,12 +121,6 @@ export function getParser() {
     tagValueProcessor: returnNull,
     attributeValueProcessor: returnNull,
     updateTag(tagName, jPath, attrs) {
-      const unionDiscriminator = attrUnionDiscriminators.get(jPath);
-
-      if (unionDiscriminator) {
-        unionDiscriminator(attrs);
-      }
-
       const matches = tagNameMatcher.exec(tagName);
 
       if (matches !== null && matches.groups) {

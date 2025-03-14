@@ -37,11 +37,11 @@ describe(file, () => {
   });
 
   it('has an creator of "Johnston, Mary"', () => {
-    deepEqual(book.creator, [
+    deepEqual(book.relators, [
       {
-        kind: 'agent',
         about: '2009/agents/695',
         name: 'Johnston, Mary',
+        codes: ['cre'],
         birthdate: 1870,
         deathdate: 1936,
         webpage: [

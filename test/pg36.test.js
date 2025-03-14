@@ -34,10 +34,10 @@ describe('pg36.rdf', () => {
   });
 
   it('has an creator of "Wells, H. G. (Herbert George)"', () => {
-    deepEqual(book.creator, [{
-      kind: 'agent',
+    deepEqual(book.relators, [{
       about: '2009/agents/30',
       name: 'Wells, H. G. (Herbert George)',
+      codes: ['cre'],
       birthdate: 1866,
       deathdate: 1946,
       alias: ['Wells, Herbert George'],

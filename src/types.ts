@@ -81,11 +81,10 @@ export interface UnformattedRDFFile {
   }
 }
 
-export interface TaggedAgent {
+export interface Agent {
   about: string;
-  kind: 'agent';
   name: string;
-  code?: string;
+  codes: string[];
   birthdate?: number;
   deathdate?: number;
   alias?: string[];
@@ -129,15 +128,13 @@ export interface FormattedEbook {
   bookshelf: string[];
   type: string;
 
-  creator?: (TaggedAgent | TaggedResource)[],
-
   /**
    * Relator terms and their associated codes designate the relationship
    * between an agent and a bibliographic resource.
    *
    * https://id.loc.gov/vocabulary/relators.html
    */
-  relators?: (TaggedAgent | TaggedResource)[],
+  relators: Agent[],
 
   files: File[]
 }
@@ -150,7 +147,7 @@ export interface FormattedRDFFile {
 
 export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
   file: File,
-  agentOrResource: TaggedAgent | TaggedResource,
+  agent: Agent,
 }> = {
   definitions: {
     file: {
@@ -172,34 +169,25 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
         }
       }
     },
-    agentOrResource: {
-      discriminator: 'kind',
-      mapping: {
-        agent: {
-          properties: {
-            about: { type: 'string' },
-            name: { type: 'string' },
-          },
-          optionalProperties: {
-            alias: {
-              elements: { type: 'string' }
-            },
-            birthdate: { type: 'float64' },
-            code: { type: 'string' },
-            deathdate: { type: 'float64' },
-            webpage: {
-              elements: { type: 'string' }
-            },
+    agent: {
+      properties: {
+        about: { type: 'string' },
+        name: { type: 'string' },
+        codes: {
+          elements: {
+            type: 'string'
           }
         },
-        resource: {
-          properties: {
-            resource: { type: 'string' }
-          },
-          optionalProperties: {
-            code: { type: 'string' }
-          },
-        }
+      },
+      optionalProperties: {
+        alias: {
+          elements: { type: 'string' }
+        },
+        birthdate: { type: 'float64' },
+        deathdate: { type: 'float64' },
+        webpage: {
+          elements: { type: 'string' }
+        },
       }
     },
   },
@@ -211,6 +199,11 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     issued: { type: 'string' },
     rights: { type: 'string' },
     downloads: { type: 'float64' },
+    relators: {
+      elements: {
+        ref: 'agent'
+      }
+    },
     marc: {
       values: {}
     },
@@ -234,18 +227,8 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     alternative: {
       elements: { type: 'string' }
     },
-    creator: {
-      elements: {
-        ref: 'agentOrResource'
-      }
-    },
     description: {
       elements: { type: 'string' }
-    },
-    relators: {
-      elements: {
-        ref: 'agentOrResource'
-      }
     },
     tableOfContents: { type: 'string' },
   }
@@ -253,7 +236,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
 
 export const formattedRDFFileSchema: JTDSchemaType<FormattedRDFFile, {
   file: File,
-  agentOrResource: TaggedAgent | TaggedResource
+  agent: Agent
 }> = {
   properties: {
     rdf: {
