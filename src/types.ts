@@ -82,7 +82,7 @@ export interface UnformattedRDFFile {
 }
 
 export interface Agent {
-  about: string;
+  about: number;
   name: string;
   codes: string[];
   birthdate?: number;
@@ -171,7 +171,7 @@ export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
     },
     agent: {
       properties: {
-        about: { type: 'string' },
+        about: { type: 'uint32' },
         name: { type: 'string' },
         codes: {
           elements: {

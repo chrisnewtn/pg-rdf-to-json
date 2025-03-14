@@ -39,7 +39,7 @@ describe(file, () => {
   it('has various creators including "Bekker, Paul" and an editor', () => {
     deepEqual(book.relators, [
       {
-        about: '2009/agents/6581',
+        about: 6581,
         birthdate: 1880,
         codes: ['edt', 'cre'],
         deathdate: 1942,
@@ -49,7 +49,7 @@ describe(file, () => {
         ]
       },
       {
-        about: '2009/agents/6582',
+        about: 6582,
         name: 'Bekker, Paul',
         codes: ['cre'],
         birthdate: 1882,
@@ -59,7 +59,7 @@ describe(file, () => {
         ],
       },
       {
-        about: '2009/agents/6585',
+        about: 6585,
         name: 'Briefs, Goetz A. (Goetz Antony)',
         codes: ['cre'],
         birthdate: 1889,
@@ -72,7 +72,7 @@ describe(file, () => {
         ],
       },
       {
-        about: '2009/agents/6583',
+        about: 6583,
         name: 'Scheler, Max',
         codes: ['cre'],
         birthdate: 1874,
@@ -86,7 +86,7 @@ describe(file, () => {
         ],
       },
       {
-        about: '2009/agents/6584',
+        about: 6584,
         name: 'Sommerfeld, Arnold',
         codes: ['cre'],
         birthdate: 1868,
