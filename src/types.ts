@@ -91,24 +91,24 @@ export interface Agent {
   webpage?: string[];
 }
 
-export interface FormattedResource<T = string> {
+export interface Resource<T = string> {
   resource: T;
 }
 
-export interface TaggedResource extends FormattedResource {
+export interface TaggedResource extends Resource {
   kind: 'resource';
   code?: string;
 }
 
 export interface File {
   about: string;
-  isFormatOf: FormattedResource<number>,
+  isFormatOf: Resource<number>,
   extent: number[];
   format: string[];
   modified: Date[];
 }
 
-export interface FormattedEbook {
+export interface Book {
   about: number;
   title: string;
   alternative?: string[];
@@ -141,11 +141,11 @@ export interface FormattedEbook {
 
 export interface FormattedRDFFile {
   'rdf': {
-    'ebook': FormattedEbook
+    'ebook': Book
   }
 }
 
-export const formattedEbookSchema: JTDSchemaType<FormattedEbook, {
+export const bookSchema: JTDSchemaType<Book, {
   file: File,
   agent: Agent,
 }> = {
@@ -241,7 +241,7 @@ export const formattedRDFFileSchema: JTDSchemaType<FormattedRDFFile, {
   properties: {
     rdf: {
       properties: {
-        ebook: formattedEbookSchema
+        ebook: bookSchema
       }
     }
   }

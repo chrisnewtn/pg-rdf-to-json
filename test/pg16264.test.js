@@ -6,7 +6,7 @@ const id = 16264;
 const file = `pg${id}.rdf`;
 
 describe(file, () => {
-  /** @type {import('../dist/types.js').FormattedEbook} */
+  /** @type {import('../dist/types.js').Book} */
   let book;
 
   before(async () => (book = await getSingleBook(file)));

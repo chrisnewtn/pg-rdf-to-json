@@ -4,19 +4,21 @@ import internal from 'node:stream';
 import { formatRDFFile } from './formatters/formatters.js';
 import { getParser } from './parser.js';
 import {
-  formattedEbookSchema,
+  bookSchema,
   type UnformattedRDFFile,
-  type FormattedEbook,
+  type Book,
   type File,
   type Agent,
+  type Resource,
 } from './types.js';
 
 /** Re-export types for use downstream. */
 export {
-  formattedEbookSchema as ebookSchema,
-  FormattedEbook,
+  bookSchema,
+  Book,
   File,
   Agent,
+  Resource,
 };
 
 /**
