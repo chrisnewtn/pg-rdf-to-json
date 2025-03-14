@@ -4,6 +4,7 @@ import {
   type FormattedRDFFile,
   type UnformattedRDFFile,
 } from '../types.js';
+import formatAgentId from './formatAgentId.js';
 import formatDatetime from './formatDatetime.js';
 import formatDate from './formatDate.js';
 import formatDescription from './formatDescription.js';
@@ -101,6 +102,14 @@ function agentRules(path: string): Rule[] {
     [
       path,
       formatAgent,
+    ],
+    [
+      `${path}.agent.about`,
+      formatAgentId
+    ],
+    [
+      `${path}.resource`,
+      formatAgentId
     ],
     [
       `${path}.agent.name`,

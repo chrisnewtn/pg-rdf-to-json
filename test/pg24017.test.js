@@ -39,7 +39,7 @@ describe(file, () => {
   it('has an creator of "Freud, Sigmund" and two editors', () => {
     deepEqual(book.relators, [
       {
-        about: '2009/agents/391',
+        about: 391,
         name: 'Freud, Sigmund',
         codes: ['cre', 'edt'],
         birthdate: 1856,
@@ -50,7 +50,7 @@ describe(file, () => {
         ],
       },
       {
-        about: '2009/agents/26165',
+        about: 26165,
         name: 'Rank, Otto',
         codes: ['edt'],
         birthdate: 1884,
@@ -61,7 +61,7 @@ describe(file, () => {
         ],
       },
       {
-        about: '2009/agents/26166',
+        about: 26166,
         name: 'Sachs, Hanns',
         codes: ['edt'],
         birthdate: 1881,

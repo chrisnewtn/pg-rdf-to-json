@@ -48,7 +48,7 @@ describe(file, () => {
   it('has a creator of "Wu, Jianren"', () => {
     deepEqual(book.relators, [
       {
-        about: '2009/agents/26060',
+        about: 26060,
         name: 'Wu, Jianren',
         codes: ['cre'],
         birthdate: 1866,

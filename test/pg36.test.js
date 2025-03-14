@@ -35,7 +35,7 @@ describe('pg36.rdf', () => {
 
   it('has an creator of "Wells, H. G. (Herbert George)"', () => {
     deepEqual(book.relators, [{
-      about: '2009/agents/30',
+      about: 30,
       name: 'Wells, H. G. (Herbert George)',
       codes: ['cre'],
       birthdate: 1866,
