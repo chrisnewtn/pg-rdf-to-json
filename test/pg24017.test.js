@@ -36,17 +36,38 @@ describe(file, () => {
     deepEqual(book.language, ['de']);
   });
 
-  it('has an creator of "Freud, Sigmund"', () => {
-    deepEqual(book.creator, [
+  it('has an creator of "Freud, Sigmund" and two editors', () => {
+    deepEqual(book.relators, [
       {
-        kind: 'agent',
         about: '2009/agents/391',
         name: 'Freud, Sigmund',
+        codes: ['cre', 'edt'],
         birthdate: 1856,
         deathdate: 1939,
         webpage: [
           'https://en.wikipedia.org/wiki/Sigmund_Freud',
           'https://de.wikipedia.org/wiki/Sigmund_Freud',
+        ],
+      },
+      {
+        about: '2009/agents/26165',
+        name: 'Rank, Otto',
+        codes: ['edt'],
+        birthdate: 1884,
+        deathdate: 1939,
+        webpage: [
+          'https://en.wikipedia.org/wiki/Otto_Rank',
+          'https://de.wikipedia.org/wiki/Otto_Rank',
+        ],
+      },
+      {
+        about: '2009/agents/26166',
+        name: 'Sachs, Hanns',
+        codes: ['edt'],
+        birthdate: 1881,
+        deathdate: 1947,
+        webpage: [
+          'https://en.wikipedia.org/wiki/Hanns_Sachs',
         ],
       }
     ]);

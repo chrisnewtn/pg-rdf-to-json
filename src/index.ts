@@ -8,8 +8,7 @@ import {
   type UnformattedRDFFile,
   type FormattedEbook,
   type File,
-  type TaggedAgent,
-  type TaggedResource,
+  type Agent,
 } from './types.js';
 
 /** Re-export types for use downstream. */
@@ -17,8 +16,7 @@ export {
   formattedEbookSchema as ebookSchema,
   FormattedEbook,
   File,
-  TaggedAgent,
-  TaggedResource,
+  Agent,
 };
 
 /**

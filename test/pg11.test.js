@@ -43,11 +43,11 @@ describe(file, () => {
   });
 
   it('has an creator of "Carroll, Lewis"', () => {
-    deepEqual(book.creator, [
+    deepEqual(book.relators, [
       {
         about: '2009/agents/7',
-        kind: 'agent',
         name: 'Carroll, Lewis',
+        codes: ['cre'],
         birthdate: 1832,
         deathdate: 1898,
         alias: [

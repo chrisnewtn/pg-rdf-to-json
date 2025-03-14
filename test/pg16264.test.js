@@ -36,12 +36,22 @@ describe(file, () => {
     deepEqual(book.language, ['de']);
   });
 
-  it('has various creator including "Bekker, Paul"', () => {
-    deepEqual(book.creator, [
+  it('has various creators including "Bekker, Paul" and an editor', () => {
+    deepEqual(book.relators, [
       {
-        kind: 'agent',
+        about: '2009/agents/6581',
+        birthdate: 1880,
+        codes: ['edt', 'cre'],
+        deathdate: 1942,
+        name: 'Witkop, Philipp',
+        webpage: [
+          'http://de.wikipedia.org/wiki/Philipp_Witkop'
+        ]
+      },
+      {
         about: '2009/agents/6582',
         name: 'Bekker, Paul',
+        codes: ['cre'],
         birthdate: 1882,
         deathdate: 1937,
         webpage: [
@@ -49,9 +59,9 @@ describe(file, () => {
         ],
       },
       {
-        kind: 'agent',
         about: '2009/agents/6585',
         name: 'Briefs, Goetz A. (Goetz Antony)',
+        codes: ['cre'],
         birthdate: 1889,
         deathdate: 1974,
         alias: [
@@ -62,9 +72,9 @@ describe(file, () => {
         ],
       },
       {
-        kind: 'agent',
         about: '2009/agents/6583',
         name: 'Scheler, Max',
+        codes: ['cre'],
         birthdate: 1874,
         deathdate: 1928,
         alias: [
@@ -76,9 +86,9 @@ describe(file, () => {
         ],
       },
       {
-        kind: 'agent',
         about: '2009/agents/6584',
         name: 'Sommerfeld, Arnold',
+        codes: ['cre'],
         birthdate: 1868,
         deathdate: 1951,
         alias: [
@@ -88,10 +98,6 @@ describe(file, () => {
         webpage: [
           'https://en.wikipedia.org/wiki/Arnold_Sommerfeld'
         ],
-      },
-      {
-        kind: 'resource',
-        resource: '2009/agents/6581'
       },
     ]);
   });
