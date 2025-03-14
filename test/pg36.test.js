@@ -3,7 +3,7 @@ import { equal, deepEqual } from 'node:assert/strict';
 import { getSingleBook, getValidationErrors, validate } from './shared.js';
 
 describe('pg36.rdf', () => {
-  /** @type {import('../dist/types.js').FormattedEbook} */
+  /** @type {import('../dist/types.js').Book} */
   let book;
 
   before(async () => (book = await getSingleBook('pg36.rdf')));

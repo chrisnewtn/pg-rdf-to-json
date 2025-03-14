@@ -3,7 +3,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import { booksFromStream, booksFromArchive } from './index.js';
-import { type FormattedEbook, formattedEbookSchema } from './types.js';
+import { type Book, bookSchema } from './types.js';
 import { parseArgs, inspect } from 'node:util';
 import { Ajv } from 'ajv/dist/jtd.js';
 import { extractProp } from './util.js';
@@ -36,7 +36,7 @@ function logError(contents: string): Promise<void> {
 }
 
 async function booksToFiles(
-  books: AsyncGenerator<FormattedEbook>,
+  books: AsyncGenerator<Book>,
   {
     options,
     output
@@ -52,7 +52,7 @@ async function booksToFiles(
   const createdDirectories = new Set();
 
   const ajv = new Ajv();
-  const validate = ajv.compile(formattedEbookSchema);
+  const validate = ajv.compile(bookSchema);
 
   for await (const book of books) {
     if (options.validate) {
@@ -93,7 +93,7 @@ async function booksToFiles(
   console.log('done');
 }
 
-async function booksToStdout(books: AsyncGenerator<FormattedEbook>) {
+async function booksToStdout(books: AsyncGenerator<Book>) {
   for await (const book of books) {
     process.stdout.write(JSON.stringify(book, setToArray));
     process.stdout.write('\n');
