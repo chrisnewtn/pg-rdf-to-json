@@ -15,7 +15,7 @@
     "pretest": "npm run build",
     "test": "node --test --enable-source-maps test/**.test.js",
     "predry-run": "npm run build",
-    "dry-run": "tar -lxOf input-files/rdf-files.tar.bz2 | node --enable-source-maps dist/cli.js --validate -o output-data"
+    "dry-run": "tar -lxOf input-files/rdf-files.tar.bz2 | node --enable-source-maps dist/cli.js -vo output-data"
   },
   "repository": {
     "type": "git",

@@ -106,7 +106,8 @@ const {
 } = parseArgs({
   options: {
     validate: {
-      type: 'boolean'
+      type: 'boolean',
+      short: 'v',
     },
     input: {
       type: 'string',
