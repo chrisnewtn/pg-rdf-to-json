@@ -67,7 +67,7 @@ async function* rdfFileStream(stream: internal.Readable) {
 /**
  * Accepts a {@link internal.Readable} stream of XML text. This function will
  * parse each XML file and yield each parsed document as a
- * {@link FormattedEbook}.
+ * {@link Book}.
  *
  * @param stream A Readable stream of XML text.
  */
@@ -92,7 +92,7 @@ export async function* booksFromStream(stream: internal.Readable) {
 
 /**
  * Spawns `tar -lxOf $pathToArchive`, passes the resulting stream to
- * {@link booksFromStream} and yields each resulting {@link FormattedEbook}.
+ * {@link booksFromStream} and yields each resulting {@link Book}.
  *
  * @throws Will throw the contents of `tar`'s `stderr` if it does not exit
  * cleanly.
