@@ -1,5 +1,5 @@
 {
-  "name": "rdf2json",
+  "name": "pg-rdf-to-json",
   "version": "0.0.0",
   "description": "Transforms RDF files from rdf-files.tar.bz2 provided by Project Gutenberg into JS/JSON objects.",
   "license": "MIT",
@@ -19,7 +19,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+ssh://git@github.com/chrisnewtn/rdf2json.git"
+    "url": "git+ssh://git@github.com/chrisnewtn/pg-rdf-to-json.git"
   },
   "keywords": [
     "metadata",
@@ -31,9 +31,9 @@
     "project-gutenberg"
   ],
   "bugs": {
-    "url": "https://github.com/chrisnewtn/rdf2json/issues"
+    "url": "https://github.com/chrisnewtn/pg-rdf-to-json/issues"
   },
-  "homepage": "https://github.com/chrisnewtn/rdf2json#readme",
+  "homepage": "https://github.com/chrisnewtn/pg-rdf-to-json#readme",
   "dependencies": {
     "ajv": "^8.17.1",
     "fast-xml-parser": "^5.0.7",
