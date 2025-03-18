@@ -8,13 +8,6 @@ import { parseArgs, inspect } from 'node:util';
 import { Ajv } from 'ajv/dist/jtd.js';
 import { extractProp } from './util.js';
 
-function setToArray(_key: any, val: any) {
-  if (val instanceof Set) {
-    return Array.from(val);
-  }
-  return val;
-}
-
 function log(contents: string) {
   process.stdout.moveCursor(0, -1);
   process.stdout.cursorTo(0);
@@ -83,7 +76,7 @@ async function booksToFiles(
       createdDirectories.add(newDir);
     }
 
-    await fs.writeFile(newFile, JSON.stringify(book, setToArray, 2), 'utf8');
+    await fs.writeFile(newFile, JSON.stringify(book, null, 2), 'utf8');
 
     const count = (++processed).toString().padStart(5, '0');
 
@@ -99,7 +92,7 @@ async function booksToStdout(books: AsyncGenerator<Book>) {
 
   for await (const book of books) {
     process.stdout.write(recordSeparator);
-    process.stdout.write(JSON.stringify(book, setToArray));
+    process.stdout.write(JSON.stringify(book));
     process.stdout.write(lineFeed);
   }
 }
