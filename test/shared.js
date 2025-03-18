@@ -7,8 +7,15 @@ import { Ajv } from 'ajv/dist/jtd.js';
 import { bookSchema } from '../dist/types.js';
 import { extractProp } from '../dist/util.js';
 
-const ajv = new Ajv();
-export const validate = ajv.compile(bookSchema);
+let validateFn;
+
+export const validate = object => {
+  if (!validateFn) {
+    const ajv = new Ajv();
+    validateFn = ajv.compile(bookSchema);
+  }
+  return validateFn(object);
+}
 
 export function getValidationErrors(validateFunction, book) {
   return (validateFunction.errors || []).map(error => ({

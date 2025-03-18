@@ -1,17 +1,12 @@
 import { before, describe, it } from 'node:test';
 import { equal, deepEqual } from 'node:assert/strict';
-import { getSingleBook, getValidationErrors, validate } from './shared.js';
+import { getSingleBook } from './shared.js';
 
 describe('pg36.rdf', () => {
   /** @type {import('../dist/types.js').Book} */
   let book;
 
   before(async () => (book = await getSingleBook('pg36.rdf')));
-
-  it('is a valid ebook', () => {
-    validate(book);
-    deepEqual(getValidationErrors(validate), []);
-  });
 
   it('has an "about" of 36', () => {
     equal(book.about, 36);

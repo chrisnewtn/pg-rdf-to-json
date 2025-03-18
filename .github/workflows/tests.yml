@@ -28,4 +28,4 @@ jobs:
 
       - run: npm run build
 
-      - run: node --test --enable-source-maps
+      - run: node --test --enable-source-maps test/**.test.js
