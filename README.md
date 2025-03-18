@@ -53,7 +53,7 @@ Accepts a [`Readable`][readable] stream as its only parameter.
 
 This function expects the passed stream to yield the text of at least one XML file.
 
-This function is an [async generator][async-genertator] which means [it conforms to the async iterator protocol][async-iterator]. This means you can read its results using a [`for-await...of`][for-await-of] loop like so:
+This function is an [async generator][async-generator] which means [it conforms to the async iterator protocol][async-iterator]. This means you can read its results using a [`for-await...of`][for-await-of] loop like so:
 
 ```js
 const tar = spawn('tar', ['-lxOf', 'rdf-files.tar.bz2']);
@@ -70,7 +70,7 @@ Accepts a path to a `.tar.bz2` file as a `string` as its only parameter.
 > [!IMPORTANT]
 > This function spawns an internal instance of [`tar`][tar] and has only been tested on Linux.
 
-Like [`booksFromStream`](#booksfromstream), this function is an [async generator][async-genertator] which means [it conforms to the async iterator protocol][async-iterator]. This means you can read its results using a [`for-await...of`][for-await-of] loop like so:
+Like [`booksFromStream`](#booksfromstream), this function is an [async generator][async-generator] which means [it conforms to the async iterator protocol][async-iterator]. This means you can read its results using a [`for-await...of`][for-await-of] loop like so:
 
 ```js
 for await (const book of booksFromArchive('rdf-files.tar.bz2')) {
