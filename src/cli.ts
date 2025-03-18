@@ -94,9 +94,13 @@ async function booksToFiles(
 }
 
 async function booksToStdout(books: AsyncGenerator<Book>) {
+  const recordSeparator = String.fromCharCode(30);
+  const lineFeed = String.fromCharCode(10);
+
   for await (const book of books) {
+    process.stdout.write(recordSeparator);
     process.stdout.write(JSON.stringify(book, setToArray));
-    process.stdout.write('\n');
+    process.stdout.write(lineFeed);
   }
 }
 
