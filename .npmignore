@@ -4,7 +4,7 @@ rdf-files.tar.bz2
 input-files
 output-data
 dist
-rdf2json-*.tgz
+pg-rdf-to-json-*.tgz
 tsconfig.json
 .editorconfig
 .github
