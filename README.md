@@ -10,8 +10,38 @@ There are two main ways to use this library: As a CLI or as a library.
 
 ### CLI
 
-> [!WARNING]
-> Document CLI usage once finalized.
+The CLI accepts three arguments:
+
+#### `--input`
+
+* Short: `-i`
+* Type: `string`
+* Default: `-`
+
+This option defines the location of `rdf-files.tar.bz2` file to be read. If it is not provided, or if it is set to `-`, then the XML files will be read from stdin.
+
+#### `--output`
+
+* Short: `-o`
+* Type: `string`
+
+If passed, this value should be a path with defines where the output JSON files should be written to. If not passed, the files will be written to stdout as [Record separator-delimited JSON][json-seq].
+
+#### `--validate`
+
+* Short: `-v`
+* Type: `boolean`
+* Default: `false`
+
+If passed and set to `true`, this option will ensure that every JSON object outputted conforms to the [JSON Type Definition][json-type-def] defined in [types.ts](./src/types.ts#L148).
+
+#### Example CLI Usage
+
+Here's an example of reading from `rdf-files.tar.bz2`, converting the contained files to JSON, and using [jq][jq] to output the title of each book as it is converted:
+
+```sh
+tar -lxOf input-files/rdf-files.tar.bz2 | npx pg-rdf-to-json | jq --seq -r .title
+```
 
 ### Library
 
@@ -57,3 +87,6 @@ for await (const book of booksFromArchive('rdf-files.tar.bz2')) {
 [async-iterator]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Iteration_protocols#the_async_iterator_and_async_iterable_protocols
 [for-await-of]: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/for-await...of
 [tar]: https://www.man7.org/linux/man-pages/man1/tar.1.html
+[json-seq]: https://en.wikipedia.org/wiki/JSON_streaming#Record_separator-delimited_JSON
+[json-type-def]: https://jsontypedef.com/
+[jq]: https://jqlang.org/
