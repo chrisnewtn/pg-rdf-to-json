@@ -101,15 +101,26 @@ async function booksToStdout(books: AsyncGenerator<Book>) {
 }
 
 const {
-  values: options,
-  positionals: [input, output]
+  values: {
+    input,
+    output,
+    ...options
+  },
 } = parseArgs({
   options: {
     validate: {
       type: 'boolean'
     },
-  },
-  allowPositionals: true,
+    input: {
+      type: 'string',
+      short: 'i',
+      default: '-',
+    },
+    output: {
+      type: 'string',
+      short: 'o',
+    },
+  }
 });
 
 const books = input !== '-' ?
