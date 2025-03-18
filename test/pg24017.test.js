@@ -1,6 +1,6 @@
 import { before, describe, it } from 'node:test';
 import { equal, deepEqual } from 'node:assert/strict';
-import { getSingleBook, getValidationErrors, validate } from './shared.js';
+import { getSingleBook } from './shared.js';
 
 const id = 24017;
 const file = `pg${id}.rdf`;
@@ -10,11 +10,6 @@ describe(file, () => {
   let book;
 
   before(async () => (book = await getSingleBook(file)));
-
-  it('is a valid ebook', () => {
-    validate(book);
-    deepEqual(getValidationErrors(validate), []);
-  });
 
   it(`has an "about of ${id}`, () => {
     equal(book.about, id);

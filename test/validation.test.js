@@ -1,5 +1,7 @@
 import { generateSchemaValidationSuite } from './shared.js';
 
+generateSchemaValidationSuite('11');
+generateSchemaValidationSuite('36');
 generateSchemaValidationSuite('1073');
 generateSchemaValidationSuite('1209');
 generateSchemaValidationSuite('1692');
@@ -25,5 +27,9 @@ generateSchemaValidationSuite('11240');
 generateSchemaValidationSuite('11299');
 generateSchemaValidationSuite('11339');
 generateSchemaValidationSuite('12296');
+generateSchemaValidationSuite('16264');
 generateSchemaValidationSuite('21823');
+generateSchemaValidationSuite('24017');
+generateSchemaValidationSuite('54567');
+generateSchemaValidationSuite('59774');
 generateSchemaValidationSuite('69279');
