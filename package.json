@@ -1,6 +1,6 @@
 {
   "name": "pg-rdf-to-json",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "Transforms RDF files from rdf-files.tar.bz2 provided by Project Gutenberg into JS/JSON objects.",
   "license": "MIT",
   "author": "Chris Newton <me@chrisnewtn.com> (https://chrisnewtn.com)",
