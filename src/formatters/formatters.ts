@@ -19,6 +19,7 @@ import formatAgent, { postProcessRelators } from './formatAgent.js';
 import mergeMarcField, { postProcessMarcFields } from './mergeMarcField.js';
 import { marcRanges } from '../input-schemas/marc.js';
 import decodeStandaloneText from './decodeStandaloneText.js';
+import formatFileIsFormatOf from './formatFileIsFormatOf.js';
 
 type Rule = [string, Formatter | Formatter[]];
 
@@ -32,8 +33,8 @@ export const formatters: Map<Rule[0], Rule[1]> = new Map([
     hoistStandaloneObjectValue
   ],
   [
-    'rdf.ebook.files.file.isFormatOf.resource',
-    formatEbookId
+    'rdf.ebook.files.file.isFormatOf',
+    formatFileIsFormatOf
   ],
   [
     'rdf.ebook.files.file.format',

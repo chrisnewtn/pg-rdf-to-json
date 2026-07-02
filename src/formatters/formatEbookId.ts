@@ -1,11 +1,10 @@
 const ebookIdMatcher = /^ebooks\/(?<id>\d+)$/;
 
 export default function formatEbookId(
-  key: string,
+  _: unknown,
   val: any,
-  path: string
 ) {
-  const matches = val.match(ebookIdMatcher);
+  const matches = ebookIdMatcher.exec(val);
 
   if (!matches || !matches.groups) {
     throw new TypeError(`Invalid "about" for Ebook ${val}`);

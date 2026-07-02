@@ -26,6 +26,8 @@ function returnNull() {
 const tagNameMatcher = /^(?<ns>\w+):(?<name>\w+)$/;
 const attrNameMatcher = /^@_(?<ns>\w+):(?<name>\w+)$/;
 
+const rootNs = 'rdf:rdf:RDF';
+
 export function getParser() {
   const tagNameMap: Map<string, string> = new Map();
   const attrNameMap: Map<string, string> = new Map();
@@ -46,27 +48,27 @@ export function getParser() {
 
   const tagNameTransforms = new Map([
     [
-      'rdf:RDF',
+      rootNs,
       'rdf'
     ],
     [
-      'rdf:RDF.pgterms:ebook.rdf:about',
+      `${rootNs}.pgterms:ebook.rdf:about`,
       'id'
     ],
     [
-      'rdf:RDF.pgterms:ebook.dcterms:hasFormat',
+      `${rootNs}.pgterms:pgterms:ebook.dcterms:dcterms:hasFormat`,
       'files'
     ],
   ]);
 
   for (const [relator] of relators) {
     addAgentField(
-      `rdf:RDF.pgterms:ebook.marcrel:${relator}`
+      `${rootNs}.pgterms:ebook.marcrel:${relator}`
     );
   }
 
   addAgentField(
-    'rdf:RDF.pgterms:ebook.dcterms:creator'
+    `${rootNs}.pgterms:ebook.dcterms:creator`
   );
 
   function addAgentField(originalPath: string) {
@@ -86,7 +88,7 @@ export function getParser() {
     ignoreDeclaration: true,
     trimValues: true,
     isArray(tagName, jPath, isLeafNode, isAttribute) {
-      return arrays.has(jPath);
+      return arrays.has(jPath.toString());
     },
     ignoreAttributes(attrName, jPath) {
       return attrName.startsWith('xmlns:');
@@ -118,7 +120,7 @@ export function getParser() {
       const matches = tagNameMatcher.exec(tagName);
 
       if (matches !== null && matches.groups) {
-        return tagNameTransforms.get(jPath) ||
+        return tagNameTransforms.get(jPath.toString()) ||
           lowerFirstChar(matches.groups.name);
       }
 

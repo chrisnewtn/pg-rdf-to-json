@@ -40,7 +40,7 @@
     "html-entities": "^2.5.2"
   },
   "devDependencies": {
-    "@types/node": "^22.13.5",
-    "typescript": "^5.7.3"
+    "@types/node": "^24.13.2",
+    "typescript": "^6.0.3"
   }
 }
