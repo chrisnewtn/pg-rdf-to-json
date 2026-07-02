@@ -33,7 +33,7 @@ export interface RDFDescription<T = string> {
   }
 }
 
-export interface RDFResource {
+export interface RDFResource extends Node {
   'resource': string;
 }
 

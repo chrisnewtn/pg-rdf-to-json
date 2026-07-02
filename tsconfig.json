@@ -7,10 +7,12 @@
     "declarationMap": true,
     "inlineSourceMap": true,
     "resolveJsonModule": true,
+    "rootDir": "src",
     "outDir": "dist",
     "moduleResolution": "NodeNext",
     "module": "NodeNext",
-    "target": "ES2022"
+    "target": "ES2022",
+    "types": ["node"]
   },
   "include": ["**/*.js", "**/*.ts"],
   "exclude": ["test/*.js", "dist"]
